@@ -131,17 +131,119 @@
         
         <p>Hello，大家好，我是Clock。这是我的个人博客，希望大家多来访问哈！目前内容还在简书上，正在陆续迁移中，也打算把站点迁移到私人服务器上！</p>
 <p><img src="https://diycode.b0.upaiyun.com/photo/2017/ad7717be7148f13f06e458c64ae9ac98.png" alt=""></p>
-
+<h2 id="代码高亮显示"><a href="#代码高亮显示" class="headerlink" title="代码高亮显示"></a>代码高亮显示</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="comment">//1、调用相机</span></div><div class="line">File mPhotoFile = <span class="keyword">new</span> File(folder,filename);</div><div class="line">Intent captureIntent = <span class="keyword">new</span> Intent(MediaStore.ACTION_IMAGE_CAPTURE);</div><div class="line">Uri fileUri = Uri.fromFile(mPhotoFile);</div><div class="line">captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);</div><div class="line">mActivity.startActivityForResult(captureIntent, CAPTURE_PHOTO_REQUEST_CODE);</div><div class="line"></div><div class="line"><span class="comment">//2、拿到照片</span></div><div class="line"><span class="meta">@Override</span></div><div class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onActivityResult</span><span class="params">(<span class="keyword">int</span> requestCode, <span class="keyword">int</span> resultCode, Intent data)</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span> (requestCode == CapturePhotoHelper.CAPTURE_PHOTO_REQUEST_CODE &amp;&amp; resultCode == RESULT_OK) &#123;</div><div class="line">        File photoFile = mCapturePhotoHelper.getPhoto();<span class="comment">//获取拍完的照片</span></div><div class="line">        <span class="keyword">if</span> (photoFile != <span class="keyword">null</span>) &#123;</div><div class="line">            PhotoPreviewActivity.preview(<span class="keyword">this</span>, photoFile);<span class="comment">//跳转到预览界面</span></div><div class="line">        &#125;</div><div class="line">        finish();</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        <span class="keyword">super</span>.onActivityResult(requestCode, resultCode, data);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">//3、各种各样处理这张图片的业务代码</span></div></pre></td></tr></table></figure>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.coderclock.com/2017/02/12/hello-clock/" data-id="cizbhd9li00023cetipoyn16f" class="article-share-link">分享</a>
+      <a data-url="http://blog.coderclock.com/2017/02/12/hello-clock/" data-id="cizc9v9he0002lketyfakyuly" class="article-share-link">分享</a>
       
         <a href="http://blog.coderclock.com/2017/02/12/hello-clock/#ds-thread" class="article-comment-link">留言</a>
       
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Blog/">Blog</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/D-clock爱吃葱花/">D_clock爱吃葱花</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Hexo/">Hexo</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-Android性能分析工具整理汇总" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/01/12/Android性能分析工具整理汇总/" class="article-date">
+  <time datetime="2016-01-11T16:00:00.000Z" itemprop="datePublished">2016-01-12</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Android/">Android</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/01/12/Android性能分析工具整理汇总/">Android性能分析工具整理汇总</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>把做Android开发以来碰到的一些不错的性能分析工具做个整理汇总…</p>
+        
+          <p class="article-more-link">
+            <a href="/2016/01/12/Android性能分析工具整理汇总/#more">继续阅读全文 »</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://blog.coderclock.com/2016/01/12/Android性能分析工具整理汇总/" data-id="cize9p5wo00000oetoy7d0q62" class="article-share-link">分享</a>
+      
+        <a href="http://blog.coderclock.com/2016/01/12/Android性能分析工具整理汇总/#ds-thread" class="article-comment-link">留言</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/工具/">工具</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/性能分析/">性能分析</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-Android编码命名规范" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2015/12/27/Android编码命名规范/" class="article-date">
+  <time datetime="2015-12-26T16:00:00.000Z" itemprop="datePublished">2015-12-27</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Android/">Android</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/12/27/Android编码命名规范/">Android编码命名规范</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>今年正式本科毕业，目前为止参与过的团队开发项目也有四五个。阅读过各式各样的混乱代码，最离谱的见过所有的变量都用中文拼音首字母，心中真是万千匹草泥马在奔腾。由此，也意识到命名对于编码的重要性。有人说，看一个开发者的水平如何，从看他代码的命名可以大致得出结论。好的命名除了可以让项目成员快速且更好的理解代码，自己读起来也赏心悦目。为此，特地根据自己平常的一些编码规范和网上一些资料进行整理汇总，方便自己时常查看对比。</p>
+        
+          <p class="article-more-link">
+            <a href="/2015/12/27/Android编码命名规范/#more">继续阅读全文 »</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://blog.coderclock.com/2015/12/27/Android编码命名规范/" data-id="cize8fiuj0000g8etj90ucf77" class="article-share-link">分享</a>
+      
+        <a href="http://blog.coderclock.com/2015/12/27/Android编码命名规范/#ds-thread" class="article-comment-link">留言</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/编码规范/">编码规范</a></li></ul>
 
     </footer>
   </div>
@@ -199,7 +301,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title categories">分类</h3>
     <div class="widget" id="categories">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/站点纪事/">站点纪事</a><span class="category-list-count">1</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Android/">Android</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/站点纪事/">站点纪事</a><span class="category-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -209,7 +311,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title tagcloud">标签云</h3>
     <div class="widget tagcloud">
-      <a href="/tags/Blog/" style="font-size: 10px;">Blog</a> <a href="/tags/D-clock爱吃葱花/" style="font-size: 10px;">D_clock爱吃葱花</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a>
+      <a href="/tags/Android/" style="font-size: 20px;">Android</a> <a href="/tags/Blog/" style="font-size: 10px;">Blog</a> <a href="/tags/D-clock爱吃葱花/" style="font-size: 10px;">D_clock爱吃葱花</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/工具/" style="font-size: 10px;">工具</a> <a href="/tags/性能分析/" style="font-size: 10px;">性能分析</a> <a href="/tags/编码规范/" style="font-size: 10px;">编码规范</a>
     </div>
   </div>
 
@@ -222,6 +324,14 @@
         
           <li>
             <a href="/2017/02/12/hello-clock/">Hello Hexo</a>
+          </li>
+        
+          <li>
+            <a href="/2016/01/12/Android性能分析工具整理汇总/">Android性能分析工具整理汇总</a>
+          </li>
+        
+          <li>
+            <a href="/2015/12/27/Android编码命名规范/">Android编码命名规范</a>
           </li>
         
       </ul>
@@ -251,7 +361,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title archive">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">二月 2017</a><span class="archive-list-count">1</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">二月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 

@@ -5,17 +5,23 @@
   
   <title>Hello Hexo | 技术视界</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Hello，大家好，我是Clock。这是我的个人博客，希望大家多来访问哈！目前内容还在简书上，正在陆续迁移中，也打算把站点迁移到私人服务器上！">
+  <meta name="description" content="Hello，大家好，我是Clock。这是我的个人博客，希望大家多来访问哈！目前内容还在简书上，正在陆续迁移中，也打算把站点迁移到私人服务器上！
+
+代码高亮显示1234567891011121314151617181920212223//1、调用相机File mPhotoFile = new File(folder,filename);Intent captureIntent = new Inten">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Hello Hexo">
 <meta property="og:url" content="http://blog.coderclock.com/2017/02/12/hello-clock/index.html">
 <meta property="og:site_name" content="技术视界">
-<meta property="og:description" content="Hello，大家好，我是Clock。这是我的个人博客，希望大家多来访问哈！目前内容还在简书上，正在陆续迁移中，也打算把站点迁移到私人服务器上！">
+<meta property="og:description" content="Hello，大家好，我是Clock。这是我的个人博客，希望大家多来访问哈！目前内容还在简书上，正在陆续迁移中，也打算把站点迁移到私人服务器上！
+
+代码高亮显示1234567891011121314151617181920212223//1、调用相机File mPhotoFile = new File(folder,filename);Intent captureIntent = new Inten">
 <meta property="og:image" content="https://diycode.b0.upaiyun.com/photo/2017/ad7717be7148f13f06e458c64ae9ac98.png">
-<meta property="og:updated_time" content="2017-02-17T14:03:10.321Z">
+<meta property="og:updated_time" content="2017-02-19T06:08:09.557Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Hello Hexo">
-<meta name="twitter:description" content="Hello，大家好，我是Clock。这是我的个人博客，希望大家多来访问哈！目前内容还在简书上，正在陆续迁移中，也打算把站点迁移到私人服务器上！">
+<meta name="twitter:description" content="Hello，大家好，我是Clock。这是我的个人博客，希望大家多来访问哈！目前内容还在简书上，正在陆续迁移中，也打算把站点迁移到私人服务器上！
+
+代码高亮显示1234567891011121314151617181920212223//1、调用相机File mPhotoFile = new File(folder,filename);Intent captureIntent = new Inten">
 <meta name="twitter:image" content="https://diycode.b0.upaiyun.com/photo/2017/ad7717be7148f13f06e458c64ae9ac98.png">
   
     <link rel="alternate" href="/atom.xml" title="技术视界" type="application/atom+xml">
@@ -132,11 +138,11 @@
         
         <p>Hello，大家好，我是Clock。这是我的个人博客，希望大家多来访问哈！目前内容还在简书上，正在陆续迁移中，也打算把站点迁移到私人服务器上！</p>
 <p><img src="https://diycode.b0.upaiyun.com/photo/2017/ad7717be7148f13f06e458c64ae9ac98.png" alt=""></p>
-
+<h2 id="代码高亮显示"><a href="#代码高亮显示" class="headerlink" title="代码高亮显示"></a>代码高亮显示</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="comment">//1、调用相机</span></div><div class="line">File mPhotoFile = <span class="keyword">new</span> File(folder,filename);</div><div class="line">Intent captureIntent = <span class="keyword">new</span> Intent(MediaStore.ACTION_IMAGE_CAPTURE);</div><div class="line">Uri fileUri = Uri.fromFile(mPhotoFile);</div><div class="line">captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);</div><div class="line">mActivity.startActivityForResult(captureIntent, CAPTURE_PHOTO_REQUEST_CODE);</div><div class="line"></div><div class="line"><span class="comment">//2、拿到照片</span></div><div class="line"><span class="meta">@Override</span></div><div class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onActivityResult</span><span class="params">(<span class="keyword">int</span> requestCode, <span class="keyword">int</span> resultCode, Intent data)</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span> (requestCode == CapturePhotoHelper.CAPTURE_PHOTO_REQUEST_CODE &amp;&amp; resultCode == RESULT_OK) &#123;</div><div class="line">        File photoFile = mCapturePhotoHelper.getPhoto();<span class="comment">//获取拍完的照片</span></div><div class="line">        <span class="keyword">if</span> (photoFile != <span class="keyword">null</span>) &#123;</div><div class="line">            PhotoPreviewActivity.preview(<span class="keyword">this</span>, photoFile);<span class="comment">//跳转到预览界面</span></div><div class="line">        &#125;</div><div class="line">        finish();</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        <span class="keyword">super</span>.onActivityResult(requestCode, resultCode, data);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">//3、各种各样处理这张图片的业务代码</span></div></pre></td></tr></table></figure>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.coderclock.com/2017/02/12/hello-clock/" data-id="cizbhd9li00023cetipoyn16f" class="article-share-link">分享</a>
+      <a data-url="http://blog.coderclock.com/2017/02/12/hello-clock/" data-id="cizc9v9he0002lketyfakyuly" class="article-share-link">分享</a>
       
         <a href="http://blog.coderclock.com/2017/02/12/hello-clock/#ds-thread" class="article-comment-link">留言</a>
       
@@ -148,6 +154,16 @@
   </div>
   
     
+<nav id="article-nav">
+  
+  
+    <a href="/2016/01/12/Android性能分析工具整理汇总/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">Android性能分析工具整理汇总</div>
+    </a>
+  
+</nav>
+
   
 </article>
 
@@ -168,26 +184,24 @@
     
   
     
-  
+    <div class="widget-wrap">
     
-
-  
-    
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title recent-posts">最新文章</h3>
-    <div class="widget">
-      <ul>
-        
-          <li>
-            <a href="/2017/02/12/hello-clock/">Hello Hexo</a>
-          </li>
-        
-      </ul>
+      <div class="widget" id="toc-widget-fixed">
+      
+        <strong class="toc-title">文章目录</strong>
+        <div class="toc-widget-list">
+              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#代码高亮显示"><span class="toc-number">1.</span> <span class="toc-text">代码高亮显示</span></a></li></ol>
+          </div>
+      </div>
     </div>
-  </div>
 
+  
+    
+
+  
+    
+  
+    
   
     
 
