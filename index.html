@@ -101,14 +101,14 @@
       <div class="outer">
         <section id="main">
   
-    <article id="post-hello-clock" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-Android开发：最详细的 NavigationDrawer 开发实践总结 " class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2017/02/12/hello-clock/" class="article-date">
-  <time datetime="2017-02-12T06:30:48.475Z" itemprop="datePublished">2017-02-12</time>
+    <a href="/2016/02/28/Android开发：最详细的 NavigationDrawer 开发实践总结 /" class="article-date">
+  <time datetime="2016-02-27T16:00:00.000Z" itemprop="datePublished">2016-02-28</time>
 </a>
     
   <div class="article-category">
-    <a class="article-category-link" href="/categories/站点纪事/">站点纪事</a>
+    <a class="article-category-link" href="/categories/Android/">Android</a>
   </div>
 
   </div>
@@ -119,7 +119,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2017/02/12/hello-clock/">Hello Hexo</a>
+      <a class="article-title" href="/2016/02/28/Android开发：最详细的 NavigationDrawer 开发实践总结 /">Android开发：最详细的 NavigationDrawer 开发实践总结</a>
     </h1>
   
 
@@ -127,21 +127,27 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <!-- Table of Contents -->
+        <p>继前面写的两篇文章之后（<strong>有问题欢迎反馈哦</strong>）：</p>
+<ol>
+<li><a href="http://blog.coderclock.com/2016/02/04/Android%E5%BC%80%E5%8F%91%EF%BC%9ATranslucent%20System%20Bar%20%E7%9A%84%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/">Android开发：Translucent System Bar 的最佳实践</a></li>
+<li><a href="http://blog.coderclock.com/2016/02/20/Android%E5%BC%80%E5%8F%91%EF%BC%9A%E6%9C%80%E8%AF%A6%E7%BB%86%E7%9A%84%20Toolbar%20%E5%BC%80%E5%8F%91%E5%AE%9E%E8%B7%B5%E6%80%BB%E7%BB%93/">Android开发：最详细的 Toolbar 开发实践总结</a></li>
+</ol>
+<p>接着来写写Android系统UI新特性，本文是我对最近开发过程中应用 <strong>NavigationDrawer</strong> 特性的详细总结。<strong>本文涉及到的所有代码实现细节，会在文末附上源码地址。有问题欢迎在下方留言讨论</strong> 。</p>
         
-        <p>Hello，大家好，我是Clock。这是我的个人博客，希望大家多来访问哈！目前内容还在简书上，正在陆续迁移中，也打算把站点迁移到私人服务器上！</p>
-<p><img src="https://diycode.b0.upaiyun.com/photo/2017/ad7717be7148f13f06e458c64ae9ac98.png" alt=""></p>
-<h2 id="代码高亮显示"><a href="#代码高亮显示" class="headerlink" title="代码高亮显示"></a>代码高亮显示</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="comment">//1、调用相机</span></div><div class="line">File mPhotoFile = <span class="keyword">new</span> File(folder,filename);</div><div class="line">Intent captureIntent = <span class="keyword">new</span> Intent(MediaStore.ACTION_IMAGE_CAPTURE);</div><div class="line">Uri fileUri = Uri.fromFile(mPhotoFile);</div><div class="line">captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);</div><div class="line">mActivity.startActivityForResult(captureIntent, CAPTURE_PHOTO_REQUEST_CODE);</div><div class="line"></div><div class="line"><span class="comment">//2、拿到照片</span></div><div class="line"><span class="meta">@Override</span></div><div class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onActivityResult</span><span class="params">(<span class="keyword">int</span> requestCode, <span class="keyword">int</span> resultCode, Intent data)</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span> (requestCode == CapturePhotoHelper.CAPTURE_PHOTO_REQUEST_CODE &amp;&amp; resultCode == RESULT_OK) &#123;</div><div class="line">        File photoFile = mCapturePhotoHelper.getPhoto();<span class="comment">//获取拍完的照片</span></div><div class="line">        <span class="keyword">if</span> (photoFile != <span class="keyword">null</span>) &#123;</div><div class="line">            PhotoPreviewActivity.preview(<span class="keyword">this</span>, photoFile);<span class="comment">//跳转到预览界面</span></div><div class="line">        &#125;</div><div class="line">        finish();</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        <span class="keyword">super</span>.onActivityResult(requestCode, resultCode, data);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">//3、各种各样处理这张图片的业务代码</span></div></pre></td></tr></table></figure>
+          <p class="article-more-link">
+            <a href="/2016/02/28/Android开发：最详细的 NavigationDrawer 开发实践总结 /#more">继续阅读全文 »</a>
+          </p>
+        
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.coderclock.com/2017/02/12/hello-clock/" data-id="cizfn0krf000934etl0rn8trf" class="article-share-link">分享</a>
+      <a data-url="http://blog.coderclock.com/2016/02/28/Android开发：最详细的 NavigationDrawer 开发实践总结 /" data-id="cizfq3hu000006oetiu60stjt" class="article-share-link">分享</a>
       
-        <a href="http://blog.coderclock.com/2017/02/12/hello-clock/#ds-thread" class="article-comment-link">留言</a>
+        <a href="http://blog.coderclock.com/2016/02/28/Android开发：最详细的 NavigationDrawer 开发实践总结 /#ds-thread" class="article-comment-link">留言</a>
       
       
       
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Blog/">Blog</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/D-clock爱吃葱花/">D_clock爱吃葱花</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Hexo/">Hexo</a></li></ul>
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/UI效果/">UI效果</a></li></ul>
 
     </footer>
   </div>
@@ -403,7 +409,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title categories">分类</h3>
     <div class="widget" id="categories">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Android/">Android</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/站点纪事/">站点纪事</a><span class="category-list-count">1</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Android/">Android</a><span class="category-list-count">5</span></li></ul>
     </div>
   </div>
 
@@ -413,7 +419,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title tagcloud">标签云</h3>
     <div class="widget tagcloud">
-      <a href="/tags/Android/" style="font-size: 20px;">Android</a> <a href="/tags/Blog/" style="font-size: 10px;">Blog</a> <a href="/tags/D-clock爱吃葱花/" style="font-size: 10px;">D_clock爱吃葱花</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/UI效果/" style="font-size: 15px;">UI效果</a> <a href="/tags/工具/" style="font-size: 10px;">工具</a> <a href="/tags/性能分析/" style="font-size: 10px;">性能分析</a> <a href="/tags/编码规范/" style="font-size: 10px;">编码规范</a>
+      <a href="/tags/Android/" style="font-size: 20px;">Android</a> <a href="/tags/UI效果/" style="font-size: 15px;">UI效果</a> <a href="/tags/工具/" style="font-size: 10px;">工具</a> <a href="/tags/性能分析/" style="font-size: 10px;">性能分析</a> <a href="/tags/编码规范/" style="font-size: 10px;">编码规范</a>
     </div>
   </div>
 
@@ -425,7 +431,7 @@
       <ul>
         
           <li>
-            <a href="/2017/02/12/hello-clock/">Hello Hexo</a>
+            <a href="/2016/02/28/Android开发：最详细的 NavigationDrawer 开发实践总结 /">Android开发：最详细的 NavigationDrawer 开发实践总结</a>
           </li>
         
           <li>
@@ -471,7 +477,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title archive">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">二月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">1</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 
