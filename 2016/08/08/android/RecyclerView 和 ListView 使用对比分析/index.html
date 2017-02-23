@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>RecyclerView 和 ListView 使用对比分析 | 技术视界</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="今天这篇文章主要是向大家介绍 RecyclerView 和 ListView 的使用对比，文章主要包括以下几点的内容：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RecyclerView 和 ListView 使用对比分析">
+<meta property="og:url" content="http://blog.coderclock.com/2016/08/08/android/RecyclerView 和 ListView 使用对比分析/index.html">
+<meta property="og:site_name" content="技术视界">
+<meta property="og:description" content="今天这篇文章主要是向大家介绍 RecyclerView 和 ListView 的使用对比，文章主要包括以下几点的内容：">
+<meta property="og:image" content="https://diycode.b0.upaiyun.com/photo/2017/e14b738e537c063e7634fc77bb9108da.gif">
+<meta property="og:image" content="https://diycode.b0.upaiyun.com/photo/2017/798c147cdde4f173dcd6c58c00c1b3c2.png">
+<meta property="og:image" content="https://diycode.b0.upaiyun.com/photo/2017/2c421c55f34abb26d40d4980b956a59e.gif">
+<meta property="og:image" content="https://diycode.b0.upaiyun.com/photo/2017/addf665109385cb4cddb1fe84b704b91.png">
+<meta property="og:image" content="https://diycode.b0.upaiyun.com/photo/2017/fc1fac6e696e7fe673e8440d91df8d5c.gif">
+<meta property="og:image" content="https://diycode.b0.upaiyun.com/photo/2017/fdb37cc505debbd62434baf27f531a7c.png">
+<meta property="og:image" content="https://diycode.b0.upaiyun.com/photo/2017/9cc8fde8dcca920d4a7f313e1484bce4.gif">
+<meta property="og:image" content="https://diycode.b0.upaiyun.com/photo/2017/d61e1c4e884ef2a9a390a27162ef7068.gif">
+<meta property="og:image" content="https://diycode.b0.upaiyun.com/photo/2017/da102ff7b03d300e0baef66cebcbc1ca.png">
+<meta property="og:image" content="https://diycode.b0.upaiyun.com/photo/2017/47eac3a863cc9b0dda5cee933882f68d.gif">
+<meta property="og:image" content="https://diycode.b0.upaiyun.com/photo/2017/bd821362d6a4138e6472001d66c1e2e7.png">
+<meta property="og:image" content="https://diycode.b0.upaiyun.com/photo/2017/61065789697d8d0edf298c89b64d76c1.png">
+<meta property="og:image" content="https://diycode.b0.upaiyun.com/photo/2017/afa2dfb4916b0085c15173fdfbe17dfe.gif">
+<meta property="og:image" content="https://diycode.b0.upaiyun.com/photo/2017/8dc3658ae3d290326ebeb762a78f3808.png">
+<meta property="og:image" content="https://diycode.b0.upaiyun.com/photo/2017/6ed1116dd7658896009c5502c5208de8.gif">
+<meta property="og:image" content="https://diycode.b0.upaiyun.com/photo/2017/dd5b468ec3168f868adbf8f984ada9b8.png">
+<meta property="og:image" content="https://diycode.b0.upaiyun.com/photo/2017/74a3e453fb017592a013b0cfa912b628.png">
+<meta property="og:image" content="https://diycode.b0.upaiyun.com/photo/2017/88ae9404603e63ba02fbdd01353d8917.png">
+<meta property="og:image" content="https://diycode.b0.upaiyun.com/photo/2017/06b0b1a311c50d8abd910ca5d61dc723.png">
+<meta property="og:image" content="https://diycode.b0.upaiyun.com/photo/2017/eaeab46073c22684fbd1d1cf34e918d1.png">
+<meta property="og:image" content="https://diycode.b0.upaiyun.com/photo/2017/e8cdbcbdb7f387a5a3fe4112d02ec10b.gif">
+<meta property="og:image" content="https://diycode.b0.upaiyun.com/photo/2017/68943a44996c578fbb72700e2ea4de65.png">
+<meta property="og:image" content="https://diycode.b0.upaiyun.com/photo/2017/5ebd540a153df2d94d8bd67bb9d1b155.gif">
+<meta property="og:updated_time" content="2017-02-22T16:34:57.190Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="RecyclerView 和 ListView 使用对比分析">
+<meta name="twitter:description" content="今天这篇文章主要是向大家介绍 RecyclerView 和 ListView 的使用对比，文章主要包括以下几点的内容：">
+<meta name="twitter:image" content="https://diycode.b0.upaiyun.com/photo/2017/e14b738e537c063e7634fc77bb9108da.gif">
+  
+    <link rel="alternate" href="/atom.xml" title="技术视界" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  
+    
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+<!-- Google Analytics -->
+<script type="text/javascript">
+
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  	ga('create', 'UA-91393761-2', 'auto');
+  	ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+  
+	<!-- 百度统计 -->
+	<script type="text/javascript">
+		var _hmt = _hmt || [];
+		(function() {
+ 			var hm = document.createElement("script");
+  			hm.src = "https://hm.baidu.com/hm.js?9e8a7a9cb9edac601fdb29f1394bc51e";
+			var s = document.getElementsByTagName("script")[0]; 
+  			s.parentNode.insertBefore(hm, s);
+		})();
+	</script>
+
+  
+	<!-- CNZZ统计 -->
+	<script type="text/javascript">
+		var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+		document.write(unescape("%3Cspan id='cnzz_stat_icon_1261297942'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s95.cnzz.com/z_stat.php%3Fid%3D1261297942%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));
+	</script>
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    
+    <div id="header-inner" class="inner">
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://blog.coderclock.com"></form>
+      </div>
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">首页</a>
+        
+          <a class="main-nav-link" href="/archives">归档</a>
+        
+          <a class="main-nav-link" href="/about">关于</a>
+        
+      </nav>
+      
+    </div>
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">技术视界</a>
+      </h1>
+      
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-android/RecyclerView 和 ListView 使用对比分析" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/08/08/android/RecyclerView 和 ListView 使用对比分析/" class="article-date">
+  <time datetime="2016-08-07T16:00:00.000Z" itemprop="datePublished">2016-08-08</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Android/">Android</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      RecyclerView 和 ListView 使用对比分析
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- Table of Contents -->
+        
+        <p>今天这篇文章主要是向大家介绍 RecyclerView 和 ListView 的使用对比，文章主要包括以下几点的内容：</p>
+<a id="more"></a>
+<ul>
+<li>RecyclerView 和 ListView 布局效果的对比</li>
+<li>RecyclerView 和 ListView 一些常用的功能 和 API 的对比</li>
+<li>RecyclerView 和 ListView 在 Android L 引入<strong>嵌套滚动机制</strong>之后的对比</li>
+</ul>
+<p><strong>有一点需要强调下，文中所有的效果在真机上都是很流畅的，因为录制 GIF 图很容易掉帧，所以特地放慢了操作，千万不要误会成卡顿了啊！</strong></p>
+<h2 id="布局效果对比"><a href="#布局效果对比" class="headerlink" title="布局效果对比"></a>布局效果对比</h2><p>作为一枚控件，要引起开发者使用的欲望自然先是从显示效果看起（看脸的世界），ListView 大家对效果已经很熟悉了，这里直接跳过，而作为 RecyclerView，它能带给效果要比 ListView 强大得多，如下图</p>
+<p><img src="https://diycode.b0.upaiyun.com/photo/2017/e14b738e537c063e7634fc77bb9108da.gif" alt=""></p>
+<p>Android 默认提供的 RecyclerView 就能支持 <strong>线性布局</strong>、<strong>网格布局</strong>、<strong>瀑布流布局</strong> 三种（这里我们暂且不提代码细节，后文再说），而且同时还能够控制横向还是纵向滚动。怎样，从效果上足以碾压 ListView 有木有。</p>
+<ul>
+<li><strong>横向滚动的ListView开源控件是不是可以不用再找了？对，你没看错！</strong></li>
+<li><strong>瀑布流效果的开源控件是不是可以不用再找了？对，你没看错！</strong></li>
+<li><strong>连横向滚动的GridView都不用找了！对，你没看错！</strong></li>
+</ul>
+<p>到此，展示效果上的差距一目了然。</p>
+<h2 id="API-使用对比"><a href="#API-使用对比" class="headerlink" title="API 使用对比"></a>API 使用对比</h2><p>当然，一个控件我们不能完全只看效果，关键还是要看实用性，看看有没有方便我们调用的 API提高我们的开发效率。所以，接下来我们就从各个方面来看看 RecyclerView 和 ListView 在提供的API调用上的一些实践比较。</p>
+<h2 id="基础使用"><a href="#基础使用" class="headerlink" title="基础使用"></a>基础使用</h2><p>ListView 的基础使用大家再熟悉不过，其使用的关键点主要如下：</p>
+<ul>
+<li>继承重写 BaseAdapter 类</li>
+<li>自定义 ViewHolder 和 convertView 一起完成复用优化工作</li>
+</ul>
+<p>由于 ListView 已经老生常谈，所以此处就不去写示例代码了。 RecyclerView 基础使用关键点同样有两点：</p>
+<ul>
+<li>继承重写 RecyclerView.Adapter 和 RecyclerView.ViewHolder</li>
+<li>设置布局管理器，控制布局效果</li>
+</ul>
+<p>示例代码大致如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="comment">// 第一步：继承重写 RecyclerView.Adapter 和 RecyclerView.ViewHolder</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AuthorRecyclerAdapter</span> <span class="keyword">extends</span> <span class="title">RecyclerView</span>.<span class="title">Adapter</span>&lt;<span class="title">AuthorRecyclerAdapter</span>.<span class="title">AuthorViewHolder</span>&gt; </span>&#123;</div><div class="line"></div><div class="line">    ...</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> AuthorViewHolder <span class="title">onCreateViewHolder</span><span class="params">(ViewGroup parent, <span class="keyword">int</span> viewType)</span> </span>&#123;</div><div class="line">        ...</div><div class="line">        <span class="keyword">return</span> viewHolder;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onBindViewHolder</span><span class="params">(AuthorViewHolder holder, <span class="keyword">int</span> position)</span> </span>&#123;</div><div class="line">        ...</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getItemCount</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">if</span> (mData == <span class="keyword">null</span>) &#123;</div><div class="line">            <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> mData.size();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="class"><span class="keyword">class</span> <span class="title">AuthorViewHolder</span> <span class="keyword">extends</span> <span class="title">RecyclerView</span>.<span class="title">ViewHolder</span> </span>&#123;</div><div class="line"></div><div class="line">        ...</div><div class="line"></div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="title">AuthorViewHolder</span><span class="params">(View itemView)</span> </span>&#123;</div><div class="line">            <span class="keyword">super</span>(itemView);</div><div class="line">            ...</div><div class="line"></div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);</div><div class="line">mRecyclerAdapter = <span class="keyword">new</span> AuthorRecyclerAdapter(mData);</div><div class="line"></div><div class="line"><span class="comment">// 第二步：设置布局管理器，控制布局效果</span></div><div class="line">LinearLayoutManager linearLayoutManager = <span class="keyword">new</span> LinearLayoutManager(RecyclerDemoActivity.<span class="keyword">this</span>);</div><div class="line">linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);</div><div class="line">mRecyclerView.setLayoutManager(linearLayoutManager);</div><div class="line"></div><div class="line">mRecyclerView.setAdapter(mRecyclerAdapter);</div></pre></td></tr></table></figure>
+<p>从基础使用上看，我们明显可以看出，RecyclerView 相比 ListView 在基础使用上的区别主要有如下几点：</p>
+<ul>
+<li>ViewHolder 的编写规范化了</li>
+<li>RecyclerView 复用 Item 的工作 Google 全帮你搞定，不再需要像 ListView 那样自己调用 setTag</li>
+<li>RecyclerView 需要多出一步 LayoutManager 的设置工作</li>
+</ul>
+<h2 id="布局效果"><a href="#布局效果" class="headerlink" title="布局效果"></a>布局效果</h2><p>在最开始就提到，RecyclerView 能够支持各种各样的布局效果，这是 ListView 所不具有的功能，那么这个功能如何实现的呢？其核心关键在于 <a href="https://developer.android.com/reference/android/support/v7/widget/RecyclerView.LayoutManager.html" target="_blank" rel="external">RecyclerView.LayoutManager</a> 类中。从前面的基础使用可以看到，RecyclerView 在使用过程中要比 ListView 多一个 setLayoutManager 步骤，这个 LayoutManager 就是用于控制我们 RecyclerView 最终的展示效果的。</p>
+<p><img src="https://diycode.b0.upaiyun.com/photo/2017/798c147cdde4f173dcd6c58c00c1b3c2.png" alt=""></p>
+<p>而 LayoutManager 只是一个抽象类而已，系统已经为我们提供了三个相关的实现类 <strong>LinearLayoutManager（线性布局效果）</strong>、<strong>GridLayoutManager（网格布局效果）</strong>、<strong>StaggeredGridLayoutManager（瀑布流布局效果）</strong>。如果你想用 RecyclerView 来实现自己 YY 出来的一种效果，则应该去继承实现自己的 LayoutManager，并重写相应的方法，而不应该想着去改写 RecyclerView。关于 LayoutManager 的使用有下面一些常见的 API（有些在 LayoutManager 实现的子类中）</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">canScrollHorizontally();<span class="comment">//能否横向滚动</span></div><div class="line">canScrollVertically();<span class="comment">//能否纵向滚动</span></div><div class="line">scrollToPosition(<span class="keyword">int</span> position);<span class="comment">//滚动到指定位置</span></div><div class="line"></div><div class="line">setOrientation(<span class="keyword">int</span> orientation);<span class="comment">//设置滚动的方向</span></div><div class="line">getOrientation();<span class="comment">//获取滚动方向</span></div><div class="line"></div><div class="line">findViewByPosition(<span class="keyword">int</span> position);<span class="comment">//获取指定位置的Item View</span></div><div class="line">findFirstCompletelyVisibleItemPosition();<span class="comment">//获取第一个完全可见的Item位置</span></div><div class="line">findFirstVisibleItemPosition();<span class="comment">//获取第一个可见Item的位置</span></div><div class="line">findLastCompletelyVisibleItemPosition();<span class="comment">//获取最后一个完全可见的Item位置</span></div><div class="line">findLastVisibleItemPosition();<span class="comment">//获取最后一个可见Item的位置</span></div></pre></td></tr></table></figure>
+<p>上面仅仅是列出一些常用的 API 而已，更多的 API 可以查看官方文档，通常你想用 RecyclerView 实现某种效果，例如指定滚动到某个 Item 位置，但是你在 RecyclerView 中又找不到可以调用的 API 时，就可以跑到 LayoutManager 的文档去看看，基本都在那里。<strong>另外还有一点关于瀑布流布局效果 StaggeredGridLayoutManager 想说的，看到网上有些文章写的示例代码，在设置了 StaggeredGridLayoutManager 后仍要去 Adapter 中动态设置 View 的高度，才能实现瀑布流，这种做法是完全错误的，之所以 StaggeredGridLayoutManager 的瀑布流效果出不来，基本是 item 布局的 xml 问题以及数据问题导致。如果要在 Adapter 中设置 View 的高度，则完全违背了 LayoutManager 的设计理念了。</strong></p>
+<h2 id="空数据处理"><a href="#空数据处理" class="headerlink" title="空数据处理"></a>空数据处理</h2><p>ListView 提供了 setEmptyView 这个 API 来让我们处理 Adapter 中数据为空的情况，只需轻轻一 set 就能搞定一切。代码设置和效果如下</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">mListView = (ListView) findViewById(R.id.listview);</div><div class="line">mListView.setEmptyView(findViewById(R.id.empty_layout));<span class="comment">//设置内容为空时显示的视图</span></div></pre></td></tr></table></figure>
+<p><img src="https://diycode.b0.upaiyun.com/photo/2017/2c421c55f34abb26d40d4980b956a59e.gif" alt=""></p>
+<p>而 RecyclerView 并没有提供此类 API，所以，这些工作需要自己来干。虽说这类逻辑并不复杂，但是作为一个有追求的程序猿，能偷懒还是要想着偷懒的嘛…</p>
+<h2 id="HeaderView-和-FooterView"><a href="#HeaderView-和-FooterView" class="headerlink" title="HeaderView 和 FooterView"></a>HeaderView 和 FooterView</h2><p>在 ListView 的设计中，存在着 HeaderView 和 FooterView 两种类型的视图，并且系统也提供了相应的 API 来让我们设置</p>
+<p><img src="https://diycode.b0.upaiyun.com/photo/2017/addf665109385cb4cddb1fe84b704b91.png" alt=""></p>
+<p>使用 HeaderView 和 FooterView 的好处在于，当我们指向在 ListView 的头部或者底部添加一个 View 的时候（例如：添加一个下拉刷新视图，底部加载更多视图），我们可以不用影响到 Adapter 的编写，使用起来相当方便。而到了 RecyclerView 中，翻来翻去你都不会看到类似 addFooterView 、 addFooterView 这种 API，是的，没错，压根就没有…这也是 RecyclerView 让我觉得很鸡肋的地方，按道理说应该是使用频率很高的 API，居然都不给我（一脸懵逼）。那有木有解决方法呢，肯定有，系统不给就自己动手丰衣足食呗。我想到的方法比较笨，就是在 Adapter 中提供三种类型（Header，Footer以及普通Item）的 Type 和 View，但是这种方法写起来很麻烦，对 Adapter 的影响很大，改动的代码量多并且也容易产生BUG。这里需要吹一下鸿洋老师的解决方案了，大家可以看他的文章：<a href="http://blog.csdn.net/lmj623565791/article/details/51854533" target="_blank" rel="external">优雅的为RecyclerView添加HeaderView和FooterView</a> 。他的实现思路是通过装饰者模式来扩充 Adapter 的功能，从而实现添加 HeaderView 和 FooterView，并且不影响 Adapter 的编写工作，牛逼的是还能支持多个 HeaderView 和 FooterView （虽然我暂时想不到有什么应用场景，哈哈，不过先记着，以后说不定有用）。这是我目前看到的最赞成的方案了，如果你有更 nice 的方案，也欢迎给我留言。</p>
+<h2 id="局部刷新"><a href="#局部刷新" class="headerlink" title="局部刷新"></a>局部刷新</h2><p>在 ListView 中，说到刷新很多童鞋会记得 notifyDataSetChanged() ，但是说到局部刷新估计有很多童鞋就知道得比较少了。我们知道在更新了 ListView 的数据源后，需要通过 Adapter 的 notifyDataSetChanged 来通知视图更新变化，这样做比较的好处就是调用简单，坏处就是它会重绘每个 Item，但实际上并不是每个 Item 都需要重绘。最常见的，例如：朋友圈点赞，点赞只是更新当前点赞的Item，并不需要每个 Item 都更新。然而 ListView 并没有提供局部刷新刷新某个 Item 的 API 给我们，同样自己自足，套路大致如下方的 updateItemView：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AuthorListAdapter</span> <span class="keyword">extends</span> <span class="title">BaseAdapter</span> </span>&#123;</div><div class="line"></div><div class="line">    ...</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> View <span class="title">getView</span><span class="params">(<span class="keyword">int</span> position, View convertView, ViewGroup parent)</span> </span>&#123;</div><div class="line">        ...</div><div class="line">        <span class="keyword">return</span> convertView;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 更新Item视图，减少不必要的重绘</div><div class="line">     *</div><div class="line">     * <span class="doctag">@param</span> listView</div><div class="line">     * <span class="doctag">@param</span> position</div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">updateItemView</span><span class="params">(ListView listView, <span class="keyword">int</span> position)</span> </span>&#123;</div><div class="line">        <span class="comment">//换算成 Item View 在 ViewGroup 中的 index</span></div><div class="line">        <span class="keyword">int</span> index = position - listView.getFirstVisiblePosition();</div><div class="line">        <span class="keyword">if</span> (index &gt;= <span class="number">0</span> &amp;&amp; index &lt; listView.getChildCount()) &#123;</div><div class="line">            <span class="comment">//更新数据</span></div><div class="line">            AuthorInfo authorInfo = mAuthorInfoList.get(position);</div><div class="line">            authorInfo.setNickName(<span class="string">"Google Android"</span>);</div><div class="line">            authorInfo.setMotto(<span class="string">"My name is Android ."</span>);</div><div class="line">            authorInfo.setPortrait(R.mipmap.ic_launcher);</div><div class="line">            <span class="comment">//更新单个Item</span></div><div class="line">            View itemView = listView.getChildAt(index);</div><div class="line">            getView(position, itemView, listView);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>即可实现刷新单个 Item 的效果</p>
+<p><img src="https://diycode.b0.upaiyun.com/photo/2017/fc1fac6e696e7fe673e8440d91df8d5c.gif" alt=""></p>
+<p><a href="https://developer.android.com/reference/android/support/v7/widget/RecyclerView.Adapter.html" target="_blank" rel="external">RecyclerView.Adapter</a> 则我们提供了 notifyItemChanged 用于更新单个 Item View 的刷新，我们可以省去自己写局部更新的工作。</p>
+<p><img src="https://diycode.b0.upaiyun.com/photo/2017/fdb37cc505debbd62434baf27f531a7c.png" alt=""></p>
+<p>实现效果如下</p>
+<p><img src="https://diycode.b0.upaiyun.com/photo/2017/9cc8fde8dcca920d4a7f313e1484bce4.gif" alt=""></p>
+<h2 id="动画效果"><a href="#动画效果" class="headerlink" title="动画效果"></a>动画效果</h2><p>如果你细心观察上面 ListView 和 RecyclerView 局部更新 Item 的效果，你会发现相比 ListView 而言， RecyclerView 在做局部刷新的时候有一个渐变的动画效果。这也是 RecyclerView 相对非常值得一提的地方，作为 ListView 自身并没有为我们提供封装好的 API 来实现动画效果切换。所以，如果要给 ListView 的 Item 加动画，我们只能自己通过属性动画来操作 Item 的视图。 Github 也有很多封装得好好的开源库给我们用，如：<a href="https://github.com/nhaarman/ListViewAnimations" target="_blank" rel="external">ListViewAnimations</a> 就封装了大量的效果供我们玩耍，童鞋们可以自行学习一下</p>
+<p><img src="https://diycode.b0.upaiyun.com/photo/2017/d61e1c4e884ef2a9a390a27162ef7068.gif" alt=""></p>
+<p>ListViewAnimations 主要大致实现方式是通过装饰者模式来扩充 Adapter ，并结合属性动画 Animator 来添加动画效果。相比之下，RecyclerView 则为我们提供了很多基本的动画 API ，如下方的<strong>增删移改</strong></p>
+<p><img src="https://diycode.b0.upaiyun.com/photo/2017/da102ff7b03d300e0baef66cebcbc1ca.png" alt=""></p>
+<p>简单的调用即可实现相应的效果，用起来方便很多，视觉交互上也会更好些</p>
+<p><img src="https://diycode.b0.upaiyun.com/photo/2017/47eac3a863cc9b0dda5cee933882f68d.gif" alt=""></p>
+<p>如果你对动画效果有追求，觉得系统提供的并不能满足你的需求，也可以通过相应接口实现自己的动画效果，方式也非常简单，继承 <a href="https://developer.android.com/reference/android/support/v7/widget/RecyclerView.ItemAnimator.html" target="_blank" rel="external">RecyclerView.ItemAnimator</a> 类，并实现相应的方法，再调用 RecyclerView 的 setItemAnimator(RecyclerView.ItemAnimator animator) 方法设置完即可实现自定义的动画效果。</p>
+<p><img src="https://diycode.b0.upaiyun.com/photo/2017/bd821362d6a4138e6472001d66c1e2e7.png" alt=""></p>
+<p>系统也为我们提供了两个默认的动画实现：SimpleItemAnimator 和 DefaultItemAnimator。而 RecyclerView 在不手动调用 setItemAnimator 的情况下，则默认用了内置的 DefaultItemAnimator 。</p>
+<p><img src="https://diycode.b0.upaiyun.com/photo/2017/61065789697d8d0edf298c89b64d76c1.png" alt=""></p>
+<p>当然编写自定义的 ItemAnimator 也是需要一定工作量的，这里同样为大家介绍一个针对 RecyclerView 开源的动画库：<a href="https://github.com/wasabeef/recyclerview-animators" target="_blank" rel="external">recyclerview-animators</a>。其内部封装了大量的动画效果给供我们调用。</p>
+<p><img src="https://diycode.b0.upaiyun.com/photo/2017/afa2dfb4916b0085c15173fdfbe17dfe.gif" alt=""></p>
+<p>如果想要学习怎么写一个自定义 ItemAnimator ，上面介绍的开源库的代码同样不容错过。哦，对了，如果谈到动画效果，还有一个很关键的类不得不提，那就是 ItemTouchHelper 。</p>
+<p><img src="https://diycode.b0.upaiyun.com/photo/2017/8dc3658ae3d290326ebeb762a78f3808.png" alt=""></p>
+<p>ItemTouchHelper 是系统为我们提供的一个用于滑动和删除 RecyclerView 条目的工具类，用起来也是非常简单的，大致两步：</p>
+<ul>
+<li>创建 ItemTouchHelper 实例，同时实现 ItemTouchHelper.SimpleCallback 中的抽象方法，用于初始化 ItemTouchHelper</li>
+<li>调用 ItemTouchHelper 的 attachToRecyclerView 方法关联上 RecyclerView 即可</li>
+</ul>
+<p>示例代码大致如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="comment">//ItemTouchHelper 用于实现 RecyclerView Item 拖曳效果的类</span></div><div class="line">    ItemTouchHelper itemTouchHelper = <span class="keyword">new</span> ItemTouchHelper(<span class="keyword">new</span> ItemTouchHelper.Callback() &#123;</div><div class="line"></div><div class="line">        <span class="meta">@Override</span></div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getMovementFlags</span><span class="params">(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder)</span> </span>&#123;</div><div class="line">            <span class="comment">//actionState : action状态类型，有三类 ACTION_STATE_DRAG （拖曳），ACTION_STATE_SWIPE（滑动），ACTION_STATE_IDLE（静止）</span></div><div class="line">            <span class="keyword">int</span> dragFlags = makeFlag(ItemTouchHelper.ACTION_STATE_DRAG, ItemTouchHelper.UP | ItemTouchHelper.DOWN</div><div class="line">                    | ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);<span class="comment">//支持上下左右的拖曳</span></div><div class="line">            <span class="keyword">int</span> swipeFlags = makeMovementFlags(ItemTouchHelper.ACTION_STATE_SWIPE, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);<span class="comment">//表示支持左右的滑动</span></div><div class="line">            <span class="keyword">return</span> makeMovementFlags(dragFlags, swipeFlags);<span class="comment">//直接返回0表示不支持拖曳和滑动</span></div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="comment">/**</span></div><div class="line">         * <span class="doctag">@param</span> recyclerView attach的RecyclerView</div><div class="line">         * <span class="doctag">@param</span> viewHolder 拖动的Item</div><div class="line">         * <span class="doctag">@param</span> target 放置Item的目标位置</div><div class="line">         * <span class="doctag">@return</span></div><div class="line">         */</div><div class="line">        <span class="meta">@Override</span></div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">onMove</span><span class="params">(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target)</span> </span>&#123;</div><div class="line">            <span class="keyword">int</span> fromPosition = viewHolder.getAdapterPosition();<span class="comment">//要拖曳的位置</span></div><div class="line">            <span class="keyword">int</span> toPosition = target.getAdapterPosition();<span class="comment">//要放置的目标位置</span></div><div class="line">            Collections.swap(mData, fromPosition, toPosition);<span class="comment">//做数据的交换</span></div><div class="line">            notifyItemMoved(fromPosition, toPosition);</div><div class="line">            <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="comment">/**</span></div><div class="line">         * <span class="doctag">@param</span> viewHolder 滑动移除的Item</div><div class="line">         * <span class="doctag">@param</span> direction</div><div class="line">         */</div><div class="line">        <span class="meta">@Override</span></div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onSwiped</span><span class="params">(RecyclerView.ViewHolder viewHolder, <span class="keyword">int</span> direction)</span> </span>&#123;</div><div class="line">            <span class="keyword">int</span> position = viewHolder.getAdapterPosition();<span class="comment">//获取要滑动删除的Item位置</span></div><div class="line">            mData.remove(position);<span class="comment">//删除数据</span></div><div class="line">            notifyItemRemoved(position);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">    &#125;);</div><div class="line">    itemTouchHelper.attachToRecyclerView(mRecyclerView);</div></pre></td></tr></table></figure>
+<p>虽然代码中有注释，但还是稍稍解释一下，主要重写的是 getMovementFlags 、 onMove 、 onSwiped 三个抽象方法，getMovementFlags 用于告诉系统，我们的 RecyclerView 到底是支持滑动还是拖曳。如上面的示例代码，就是表示着同时支持上下左右四个方向的拖曳和左右两个方向的滑动效果。如果时滑动，则 onSwiped 会被回调，如果是拖曳 onMove 会被回调。我们再到其中实现相应的业务操作即可。最终效果如下</p>
+<p><img src="https://diycode.b0.upaiyun.com/photo/2017/6ed1116dd7658896009c5502c5208de8.gif" alt=""></p>
+<p>想想我们以前用 ListView 的时候要怎么做，RecyclerView 真的爽多了。</p>
+<h2 id="监听-Item-的事件"><a href="#监听-Item-的事件" class="headerlink" title="监听 Item 的事件"></a>监听 Item 的事件</h2><p>ListView 为我们准备了几个专门用于监听 Item 的回调接口，如单击、长按、选中某个 Item 等</p>
+<p><img src="https://diycode.b0.upaiyun.com/photo/2017/dd5b468ec3168f868adbf8f984ada9b8.png" alt=""></p>
+<p>说实话，其实我并不大喜欢这样的设计，如 setOnItemClickListener ，在我们不添加 HeaderView 和 FooterView 的时候，我们可以通过回调参数中的 position 去拿到数据源列表中对应 Item 的数据。</p>
+<p><img src="https://diycode.b0.upaiyun.com/photo/2017/74a3e453fb017592a013b0cfa912b628.png" alt=""></p>
+<p>但是，添加了 HeaderView 和 FooterView 之后就不一样了，ListView 会把 HeaderView 和 FooterView 算入 position 内。假设你原先在 onItemClick 回调方法中写了 mDataList.get(position) 这样的业务代码并且这段代码运行良好许久，但在某天你突然加了个 HeaderView 后，这段代码就开始变的有问题了，此时因为 HeaderView 占用的位置算入了 position 之内，所以 position 的最大值实际上是大于 mDataList 包含元素的个数值的，因此代码会报数组越界的错误。当然，我们可以去避免这种问题的发生，就是不通过 position 来获取数据，二是通过回调方法中的 id 。</p>
+<p><img src="https://diycode.b0.upaiyun.com/photo/2017/88ae9404603e63ba02fbdd01353d8917.png" alt=""></p>
+<p>这样就不会受到添加 HeaderView 和 FooterView 的影响了，这个 id 的值就是来自我们编写好的 Adapter 中的 getItemId 函数中返回的 id，使用 IDE 生成此函数时，默认是返回0，需要将 position 作为 Item 的 id 返回。</p>
+<p><img src="https://diycode.b0.upaiyun.com/photo/2017/06b0b1a311c50d8abd910ca5d61dc723.png" alt=""></p>
+<p>并同时在 onItemClick 中判断 id 是否值为 -1，因为 HeaderView 和 FooterView 的返回值就是 -1。前面讲到我并不大喜欢 setOnItemClickListener 这种设计，除了由这些因素的影响外，更关键的是个人认为针对 Item 的事件实际上写在 getView 方法中会更加合适，如 setOnItemClickListener 我更喜欢用在 getView 中为每个 convertView 设置 setOnClickListener 的方式去取代它。</p>
+<p>而再来看看 RecyclerView ，它并没有像 ListView 提供太多关于 Item 的某种事件监听，唯一的就是 addOnItemTouchListener </p>
+<p><img src="https://diycode.b0.upaiyun.com/photo/2017/eaeab46073c22684fbd1d1cf34e918d1.png" alt=""></p>
+<p>API 的名字言简意赅，就是监听 Item 的触摸事件。如果你想要拥有 ListView 那样监听某个 Item 的某个操作方法，可以看看这篇文章 <a href="http://blog.csdn.net/liaoinstan/article/details/51200600" target="_blank" rel="external">RecyclerView无法添加onItemClickListener最佳的高效解决方案</a> ，作者的实现思路就是通过 addOnItemTouchListener 和系统提供的 GestureDetector 手势判断结合实现的。不过，我还是更喜欢原先自己用惯的方式，虽然会被人吐槽 new 出了大量的监听器，但个人觉得这样封装会更好（哈哈，也换大家吐槽这种方式的其他劣处，看看我是不是需要改改了）。</p>
+<p>OK，关于 RecyclerView 和 ListView 一些常用的功能和 API 的对比，就大致到此。最后再来谈谈 Android L 开始之后，对 RecyclerView 和 ListView 的使用存在什么影响。</p>
+<h2 id="嵌套滚动机制"><a href="#嵌套滚动机制" class="headerlink" title="嵌套滚动机制"></a>嵌套滚动机制</h2><p>熟悉 Android 触摸事件分发机制的童鞋肯定知道，Touch 事件在进行分发的时候，由父 View 向它的子 View 传递，一旦某个子 View 开始接收进行处理，那么接下来所有事件都将由这个 View 来进行处理，它的 ViewGroup 将不会再接收到这些事件，直到下一次手指按下。而嵌套滚动机制（NestedScrolling）就是为了弥补这一机制的不足，为了让子 View 能和父 View 同时处理一个 Touch 事件。关于嵌套滚动机制（NestedScrolling），实现上相对是比较复杂的，此处就不去拓展说明，其关键在于 <strong>NestedScrollingChild</strong> 和 <strong>NestedScrollingParent</strong> 两个接口，以及系统对这两个接口的实现类 <strong>NestedScrollingChildHelper</strong> 和 <strong>NestedScrollingParentHelper</strong> 大家可以查阅相关的资料。可能说起来太抽象了，这里拿一个简单的示例效果来说明好了，如下方是用 CollapsingToolbarLayout 和 RecyclerView 搭配的效果：</p>
+<p><img src="https://diycode.b0.upaiyun.com/photo/2017/e8cdbcbdb7f387a5a3fe4112d02ec10b.gif" alt=""></p>
+<p>一开始上面一大块区域就是 CollapsingToolbarLayout ，下方的列表是 RecyclerView ，当然 RecyclerView 向上滑动时，CollapsingToolbarLayout 能够同时网上收缩，直到只剩下顶部的 Toolbar。之所以能够实现这种效果，就是完全依赖于嵌套滚动机制，如果没有这套机制，按照原有的触摸事件分发逻辑， RecyclerView 内部已经把 Touch 事件消耗掉了，完全无法引起顶部的 CollapsingToolbarLayout 产生联动收缩的效果。我们可以查看 RecyclerView 的代码实现，发现它已经实现了 NestedScrollingChild 接口</p>
+<p><img src="https://diycode.b0.upaiyun.com/photo/2017/68943a44996c578fbb72700e2ea4de65.png" alt=""></p>
+<p>如果在其他代码布局都不变的情况下，我们把 RecyclerView 替换成 ListView ，则无法产生上面图中的动态效果，因为 ListView 并不支持嵌套滚动机制，事件在 ListView 内部已经被消耗且无法传递出来，大家可以自行尝试验证一下。对下方 AppBarLayout 的使用也是同理。</p>
+<p><img src="https://diycode.b0.upaiyun.com/photo/2017/5ebd540a153df2d94d8bd67bb9d1b155.gif" alt=""></p>
+<p>关于 AppBarLayout 和 CollapsingToolbarLayout，它们并不是什么第三方控件，而是 Android 官方提供的 MaterialDesign 设计风格的控件，大家可以在官方文档中搜索到它们的资料，如果你用过 Android 原生系统，你可以在通讯录等系统内置应用看到它们的身影。如果你想使用类似 AppBarLayout 、 CollapsingToolbarLayout 这种需要嵌套滚动的机制才能达到效果的控件，那么 RecyclerView 将是你的不二之选，因为 ListView 在此根本无法发挥作用。同样的，ScrollView 也是不支持嵌套滚动机制，但是你可以使用 NestedScrollView 。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>这里只是客观的去分析一些使用上的差异，并不是想突出哪个控件好哪个控件不好，大家可以根据自己的使用场景来选择是要用 RecyclerView 还是 ListView，毕竟，<strong>合适的才是最好的</strong>。洋洋晒晒写了一大堆，相信你已经看到不少 RecyclerView 和 ListView 使用上的区别了，不知道有没有我在文中没提到的呢，欢迎下方留言。文中所有的项目实践代码都在这里：<a href="https://github.com/D-clock/AndroidSystemUiTraining" target="_blank" rel="external">https://github.com/D-clock/AndroidSystemUiTraining</a> ，需要的同学可以自行下载查看。</p>
+<p><strong>本文同步更新到 <a href="http://www.jianshu.com/users/ec95b5891948/latest_articles" target="_blank" rel="external">我的简书</a> 和 <a href="http://www.diycode.cc/d_clock" target="_blank" rel="external">我的Diycode</a>，如果你觉得文章不错，期待我的新作品，欢迎关注 <a href="http://www.jianshu.com/users/ec95b5891948/latest_articles" target="_blank" rel="external">我的简书</a> 和 <a href="http://www.diycode.cc/d_clock" target="_blank" rel="external">我的Diycode</a> ，如果能够再 Follow 一下 <a href="https://github.com/D-clock" target="_blank" rel="external">我的Github</a> 就更好了。</strong></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://blog.coderclock.com/2016/08/08/android/RecyclerView 和 ListView 使用对比分析/" data-id="cizihh9dj000cj4etzxy0nr8g" class="article-share-link">分享</a>
+      
+        <a href="http://blog.coderclock.com/2016/08/08/android/RecyclerView 和 ListView 使用对比分析/#ds-thread" class="article-comment-link">留言</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ListView/">ListView</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/RecyclerView/">RecyclerView</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/UI效果/">UI效果</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/08/28/android/知乎和简书的夜间模式实现套路/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">上一篇</strong>
+      <div class="article-nav-title">
+        
+          知乎和简书的夜间模式实现套路
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/07/19/android/深入理解 Android 中的 Matrix/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">深入理解 Android 中的 Matrix</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+      <div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="2016/08/08/android/RecyclerView 和 ListView 使用对比分析/" data-title="RecyclerView 和 ListView 使用对比分析" data-url="http://blog.coderclock.com/2016/08/08/android/RecyclerView 和 ListView 使用对比分析/"></div>
+	<!-- 多说评论框 end -->
+</div>
+
+
+</section>
+           
+    <aside id="sidebar">
+  
+    
+
+  
+    
+  
+    
+    <div class="widget-wrap">
+    
+      <div class="widget" id="toc-widget-fixed">
+      
+        <strong class="toc-title">文章目录</strong>
+        <div class="toc-widget-list">
+              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#布局效果对比"><span class="toc-number">1.</span> <span class="toc-text">布局效果对比</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#API-使用对比"><span class="toc-number">2.</span> <span class="toc-text">API 使用对比</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#基础使用"><span class="toc-number">3.</span> <span class="toc-text">基础使用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#布局效果"><span class="toc-number">4.</span> <span class="toc-text">布局效果</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#空数据处理"><span class="toc-number">5.</span> <span class="toc-text">空数据处理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HeaderView-和-FooterView"><span class="toc-number">6.</span> <span class="toc-text">HeaderView 和 FooterView</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#局部刷新"><span class="toc-number">7.</span> <span class="toc-text">局部刷新</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#动画效果"><span class="toc-number">8.</span> <span class="toc-text">动画效果</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#监听-Item-的事件"><span class="toc-number">9.</span> <span class="toc-text">监听 Item 的事件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#嵌套滚动机制"><span class="toc-number">10.</span> <span class="toc-text">嵌套滚动机制</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">11.</span> <span class="toc-text">总结</span></a></li></ol>
+          </div>
+      </div>
+    </div>
+
+  
+    
+
+  
+    
+  
+    
+  
+    
+
+
+  
+    
+
+  
+    
+
+  
+</aside>
+
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-left">
+      &copy; 2014 - 2017 D_clock爱吃葱花&nbsp;|&nbsp;
+      主题 <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
+    </div>
+     <div id="footer-right">
+      联系方式&nbsp;|&nbsp;d_clock@qq.com
+    </div>
+  </div>
+</footer>
+ <script src="/jquery/jquery.min.js"></script>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">首页</a>
+  
+    <a href="/archives" class="mobile-nav-link">归档</a>
+  
+    <a href="/about" class="mobile-nav-link">关于</a>
+  
+</nav>
+    <img class="back-to-top-btn" src="/images/fly-to-top.png"/>
+<script>
+// Elevator script included on the page, already.
+window.onload = function() {
+  var elevator = new Elevator({
+    selector:'.back-to-top-btn',
+    element: document.querySelector('.back-to-top-btn'),
+    duration: 1000 // milliseconds
+  });
+}
+</script>
+    
+
+
+    	<script type="text/javascript">
+        var duoshuoQuery = {short_name:"clockblog"};
+      </script>
+      <script src="/duoshuo/embed.js"></script>
+
+
+ <script src="/js/is.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+<script src="/js/elevator.js"></script>
+  </div>
+</body>
+</html>

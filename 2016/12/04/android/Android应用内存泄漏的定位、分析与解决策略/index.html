@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Android应用内存泄漏的定位、分析与解决策略 | 技术视界</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Hello，大家好，我是Clock。翻了一下简书，发现有一个多月没有更新博客，本来今天打算和妹纸去电影院看《你的名字》，然后再去到处浪的。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android应用内存泄漏的定位、分析与解决策略">
+<meta property="og:url" content="http://blog.coderclock.com/2016/12/04/android/Android应用内存泄漏的定位、分析与解决策略/index.html">
+<meta property="og:site_name" content="技术视界">
+<meta property="og:description" content="Hello，大家好，我是Clock。翻了一下简书，发现有一个多月没有更新博客，本来今天打算和妹纸去电影院看《你的名字》，然后再去到处浪的。">
+<meta property="og:image" content="https://diycode.b0.upaiyun.com/photo/2017/757f656da1b8789c54785e71fc4ef07e.jpg">
+<meta property="og:image" content="https://diycode.b0.upaiyun.com/photo/2017/ea7ad7378443f1b97cd12cc2954631a1.png">
+<meta property="og:image" content="https://diycode.b0.upaiyun.com/photo/2017/d443ac4e588c9bd7eab405002367a055.png">
+<meta property="og:image" content="https://diycode.b0.upaiyun.com/photo/2017/011d0a3c28e2959f202ed869e2c78754.png">
+<meta property="og:image" content="https://diycode.b0.upaiyun.com/photo/2017/b51a583ad624bdbf5c233483bffc458e.png">
+<meta property="og:image" content="https://diycode.b0.upaiyun.com/photo/2017/d655c9b788a00798a9b68cd4c1c8ea5e.png">
+<meta property="og:image" content="https://diycode.b0.upaiyun.com/photo/2017/66c4d54d3ba1f515b568ed3f60c37f36.png">
+<meta property="og:image" content="https://diycode.b0.upaiyun.com/photo/2017/e8758661a03f5b979c741bf5aaaa07c1.png">
+<meta property="og:image" content="https://diycode.b0.upaiyun.com/photo/2017/603953245743bfeeaad848aaa613183c.png">
+<meta property="og:image" content="https://diycode.b0.upaiyun.com/photo/2017/ff9e8d514a5a4b91fdff6c214da44fd1.png">
+<meta property="og:image" content="https://diycode.b0.upaiyun.com/photo/2017/dd05910330c080a653a7943dfd2ed0de.png">
+<meta property="og:image" content="https://diycode.b0.upaiyun.com/photo/2017/7f83ad3365059b558139c563397d5b1b.png">
+<meta property="og:image" content="https://diycode.b0.upaiyun.com/photo/2017/26d33a15838ea079d30c7fc05e8054d9.png">
+<meta property="og:image" content="https://diycode.b0.upaiyun.com/photo/2017/2867dd0bfd17e6a235202ad1fb8eeaf0.png">
+<meta property="og:image" content="https://diycode.b0.upaiyun.com/photo/2017/3f0b64b33e45b7563e7f91f415f40b68.png">
+<meta property="og:image" content="https://diycode.b0.upaiyun.com/photo/2017/08e087a6f8fe70a4de3425765cb1022a.png">
+<meta property="og:updated_time" content="2017-02-23T14:15:44.952Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android应用内存泄漏的定位、分析与解决策略">
+<meta name="twitter:description" content="Hello，大家好，我是Clock。翻了一下简书，发现有一个多月没有更新博客，本来今天打算和妹纸去电影院看《你的名字》，然后再去到处浪的。">
+<meta name="twitter:image" content="https://diycode.b0.upaiyun.com/photo/2017/757f656da1b8789c54785e71fc4ef07e.jpg">
+  
+    <link rel="alternate" href="/atom.xml" title="技术视界" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  
+    
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+<!-- Google Analytics -->
+<script type="text/javascript">
+
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  	ga('create', 'UA-91393761-2', 'auto');
+  	ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+  
+	<!-- 百度统计 -->
+	<script type="text/javascript">
+		var _hmt = _hmt || [];
+		(function() {
+ 			var hm = document.createElement("script");
+  			hm.src = "https://hm.baidu.com/hm.js?9e8a7a9cb9edac601fdb29f1394bc51e";
+			var s = document.getElementsByTagName("script")[0]; 
+  			s.parentNode.insertBefore(hm, s);
+		})();
+	</script>
+
+  
+	<!-- CNZZ统计 -->
+	<script type="text/javascript">
+		var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+		document.write(unescape("%3Cspan id='cnzz_stat_icon_1261297942'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s95.cnzz.com/z_stat.php%3Fid%3D1261297942%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));
+	</script>
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    
+    <div id="header-inner" class="inner">
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://blog.coderclock.com"></form>
+      </div>
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">首页</a>
+        
+          <a class="main-nav-link" href="/archives">归档</a>
+        
+          <a class="main-nav-link" href="/about">关于</a>
+        
+      </nav>
+      
+    </div>
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">技术视界</a>
+      </h1>
+      
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-android/Android应用内存泄漏的定位、分析与解决策略" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/12/04/android/Android应用内存泄漏的定位、分析与解决策略/" class="article-date">
+  <time datetime="2016-12-03T16:00:00.000Z" itemprop="datePublished">2016-12-04</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Android/">Android</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Android应用内存泄漏的定位、分析与解决策略
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- Table of Contents -->
+        
+        <p>Hello，大家好，我是Clock。翻了一下简书，发现有一个多月没有更新博客，本来今天打算和妹纸去电影院看《你的名字》，然后再去到处浪的。</p>
+<a id="more"></a>
+<p><img src="https://diycode.b0.upaiyun.com/photo/2017/757f656da1b8789c54785e71fc4ef07e.jpg" alt=""></p>
+<p>结果因为妹纸公司临时有事，她不得不回公司一趟… 然后我也只能宅家里了，既然妹纸不在家，刚好最近一直在为项目做内存泄漏的优化工作，那就来写一点个人总结好了。</p>
+<h2 id="什么是内存泄漏"><a href="#什么是内存泄漏" class="headerlink" title="什么是内存泄漏"></a>什么是内存泄漏</h2><p>对于不同的语言平台来说，进行标记回收内存的算法是不一样的，像 Android（Java）则采用 GC-Root 的标记回收算法。下面这张图就展示了 Android 内存的回收管理策略（图来自Google 2011的IO大会）</p>
+<p><img src="https://diycode.b0.upaiyun.com/photo/2017/ea7ad7378443f1b97cd12cc2954631a1.png" alt=""></p>
+<p>图中的每个圆节点代表对象的内存资源，箭头代表可达路径。当圆节点与 GC Roots 存在可达路径时，表示当前资源正被引用，虚拟机是无法对其进行回收的（如图中的黄色节点）。反过来，如果圆节点与 GC Roots 不存在可达路径，则意味着这块对象的内存资源不再被程序引用，系统虚拟机可以在 GC 过程中将其回收掉。</p>
+<p>有了上面的内存回收的栗子，那么接下来就可以说说什么是内存泄漏了。从定义上讲，Android（Java）平台的内存泄漏是指<strong>没有用的对象资源任与GC-Root保持可达路径，导致系统无法进行回收</strong>。举一个最简单的栗子，我们在 Activity 的 onCreate 函数中注册一个广播接收者，但是在 onDestory 函数中并没有执行反注册，当 Activity 被 finish 掉时，Activity 对象已经走完了自身的生命周期，应该被资源回收释放掉，但由于没有反注册， 此时 Activity 和 GC-Root 间任然有可达路径存在，导致 Activity 虽然被销毁，但是所占用的内存资源却无法被回收掉。类似的栗子其实有很多，不一一例举了。对于 Android（Java）内存回收管理想要再深入了解的童鞋，可以看看下面资源：</p>
+<ul>
+<li><a href="https://www.amazon.cn/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Java%E8%99%9A%E6%8B%9F%E6%9C%BA-JVM%E9%AB%98%E7%BA%A7%E7%89%B9%E6%80%A7%E4%B8%8E%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5-%E5%91%A8%E5%BF%97%E6%98%8E/dp/B00D2ID4PK/ref=sr_1_2?s=books&amp;ie=UTF8&amp;qid=1480838289&amp;sr=1-2&amp;keywords=%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Java%E8%99%9A%E6%8B%9F%E6%9C%BA%3AJVM%E9%AB%98%E7%BA%A7%E7%89%B9%E6%80%A7%E4%B8%8E%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5" target="_blank" rel="external">深入理解Java虚拟机:JVM高级特性与最佳实践(第2版)</a></li>
+<li><a href="http://v.youku.com/v_show/id_XMzI3NDA5MzQ4.html" target="_blank" rel="external">Google IO 2011 Memory management for Android Apps</a></li>
+</ul>
+<h2 id="泄漏的源头"><a href="#泄漏的源头" class="headerlink" title="泄漏的源头"></a>泄漏的源头</h2><p>了解完内存泄漏的理论知识后，再来归类一下内存泄漏的源头。这里我将其归位以下三类：</p>
+<ul>
+<li>自身编码引起</li>
+</ul>
+<p>由项目开发人员自身的编码造成。</p>
+<ul>
+<li>第三方代码引起</li>
+</ul>
+<p>这里的第三方代码包含两类：第三方非开源的SDK和开源的第三方框架。</p>
+<ul>
+<li>系统原因</li>
+</ul>
+<p>由 Android 系统自身造成的泄漏，如像 WebView 、 InputMethodManager 等引起的问题，还有某些第三方 ROM 存在的问题。</p>
+<h2 id="泄漏的定位"><a href="#泄漏的定位" class="headerlink" title="泄漏的定位"></a>泄漏的定位</h2><p>内存泄漏不像闪退的BUG，排查起来相对要比较困难些，比较极端的情况是当你的应用 OOM 了才发现存在内存泄漏问题，到了这种情况才去排查处理问题的话，对用户的影响就太大了。为此，我们能够在编码中尽早发现到问题就不要拖到上线之后才去填坑，下面介绍一些我比较常用排查内存泄漏的工具。</p>
+<ul>
+<li>静态代码分析工具 —— Lint</li>
+</ul>
+<p>Lint 是 Android Studio 自带的工具，使用姿势很简单 Analyze -&gt; Inspect Code 然后选择想要扫面的区域即可</p>
+<p><img src="https://diycode.b0.upaiyun.com/photo/2017/d443ac4e588c9bd7eab405002367a055.png" alt=""></p>
+<p><img src="https://diycode.b0.upaiyun.com/photo/2017/011d0a3c28e2959f202ed869e2c78754.png" alt=""></p>
+<p>对可能引起泄漏的编码，Lint 都会进行温馨提示。</p>
+<p><img src="https://diycode.b0.upaiyun.com/photo/2017/b51a583ad624bdbf5c233483bffc458e.png" alt=""></p>
+<p>这里只是抛砖引玉的介绍 Lint ，实际上玩法还有很多，大家可以自行拓展学习。除了 Lint 外，还有像 FindBugs 、 Checkstyle 等静态代码分析工具也是很不错的。</p>
+<ul>
+<li>严苛模式 —— StrictMode</li>
+</ul>
+<p>StrictMode 是 Android 系统提供的 API ，在开发环境下引入可以更早的暴露发现问题。官方文档链接在下面（需要科学上网）：</p>
+<blockquote>
+<p><a href="https://developer.android.com/reference/android/os/StrictMode.html" target="_blank" rel="external">https://developer.android.com/reference/android/os/StrictMode.html</a></p>
+</blockquote>
+<p>以官网的示例代码为栗子，一般 StrictMode 只在测试环境下启用，到了生产环境就会进行关闭，通常我们都会借助 BuildConfig.DEBUG 来实现。</p>
+<p><img src="https://diycode.b0.upaiyun.com/photo/2017/d655c9b788a00798a9b68cd4c1c8ea5e.png" alt=""></p>
+<p>启用 StrictMode 后，在过滤日志的地方加上 StrictMode 的过滤 Tag ，如果手机连接着电脑进行开发，定期观察一下 StrictMode 这个 Tag 下的日志，一般你看到一大堆红色告警的 Log，就需要好好排查一下是否跟内存泄漏有关了。</p>
+<p><img src="https://diycode.b0.upaiyun.com/photo/2017/66c4d54d3ba1f515b568ed3f60c37f36.png" alt=""></p>
+<ul>
+<li>LeakCanary</li>
+</ul>
+<p><img src="https://diycode.b0.upaiyun.com/photo/2017/e8758661a03f5b979c741bf5aaaa07c1.png" alt=""></p>
+<p>Square 公司出品的内存分析工具，官方地址如下：</p>
+<blockquote>
+<p><a href="https://github.com/square/leakcanary/" target="_blank" rel="external">https://github.com/square/leakcanary/</a></p>
+</blockquote>
+<p>LeakCanary 和 StrictMode 一样，需要在项目代码中集成，不过代码也非常简单，如下的官方示例。</p>
+<p><img src="https://diycode.b0.upaiyun.com/photo/2017/603953245743bfeeaad848aaa613183c.png" alt=""></p>
+<p>build.gradle 引入，Application 中加入两三行代码，即可搞定。以上只是简单的引入，还有更多使用姿势建议详细阅读它的 Wiki 下 FAQ：</p>
+<blockquote>
+<p><a href="https://github.com/square/leakcanary/wiki/FAQ" target="_blank" rel="external">https://github.com/square/leakcanary/wiki/FAQ</a></p>
+</blockquote>
+<p>我对使用 LeakCanary 有以下两点感受：</p>
+<ol>
+<li>当内存泄漏发生时，LeakCanary 会弹窗提示并生成对应的堆存储信息记录，这让我们对隐蔽的内存泄漏问题有了更加直观的感觉，但从实际使用来看，LeakCanary 的每个提示也并非是真正存在内存泄漏问题，要想确定是否存在问题我们还需要借助 MAT 来进行最后的确定。</li>
+<li>Android 系统本身就存在一些问题导致应用内存泄漏，LeakCanary 的 <a href="https://github.com/square/leakcanary/blob/9e74a8529ca94287fe0c3b02b7a6b39d51ecd704/leakcanary-android/src/main/java/com/squareup/leakcanary/AndroidExcludedRefs.java" target="_blank" rel="external">AndroidExcludedRefs</a> 类帮助我们处理了不少这类问题。</li>
+</ol>
+<ul>
+<li>Android Memory Monitor</li>
+</ul>
+<p>AndroidStudio 提供的工具，用于监控应用的内存使用状态，在开发中也是非常实用的工具，可以用来打印出内存的状态信息。</p>
+<p><img src="https://diycode.b0.upaiyun.com/photo/2017/ff9e8d514a5a4b91fdff6c214da44fd1.png" alt=""></p>
+<p>打印获得的内存信息如下，可以通过右上角的绿色三角形按钮去分析泄漏的 Activity 和 一些重复的字符串，目前只支持这两个，希望 Google 后面能够加入更多可选分析规则</p>
+<p><img src="https://diycode.b0.upaiyun.com/photo/2017/dd05910330c080a653a7943dfd2ed0de.png" alt=""></p>
+<p>同样，这里也只是抛砖引玉的简单介绍，关于它的使用在官方文档已经说得很详细了，需要的童鞋自行查看下方链接（需科学上网）：</p>
+<blockquote>
+<p><a href="https://developer.android.com/studio/profile/am-hprof.html" target="_blank" rel="external">https://developer.android.com/studio/profile/am-hprof.html</a></p>
+</blockquote>
+<ul>
+<li>Memory Analyzer (MAT)</li>
+</ul>
+<p>老牌子分析工具，可以从 <a href="http://www.eclipse.org/mat/" target="_blank" rel="external">http://www.eclipse.org/mat/</a> 下载获得，网上关于 MAT 使用的文章好多，大家可以自行查找。上面的 Android Memory Monitor 生成的对储存信息文件可以配置 MAT 一起来分析使用，由于 Android Memory Monitor 生成的 hprof 文件不是标准格式，所以需要做一下转换，然后导入 MAT </p>
+<p><img src="https://diycode.b0.upaiyun.com/photo/2017/7f83ad3365059b558139c563397d5b1b.png" alt=""></p>
+<p>然后通过 OQL 先定位出泄漏的对象</p>
+<p><img src="https://diycode.b0.upaiyun.com/photo/2017/26d33a15838ea079d30c7fc05e8054d9.png" alt=""></p>
+<p>通过排除除了强引用之外的其他引用链，最后分析到 GC Root 的位置</p>
+<p><img src="https://diycode.b0.upaiyun.com/photo/2017/2867dd0bfd17e6a235202ad1fb8eeaf0.png" alt=""></p>
+<p>MAT 使用起来相对繁琐，但不失为定位根源问题的利器。</p>
+<ul>
+<li>adb shell 命令</li>
+</ul>
+<p>使用 adb shell dumpsys meminfo [PackageName]，可以打印出指定包名的应用内存信息</p>
+<p><img src="https://diycode.b0.upaiyun.com/photo/2017/3f0b64b33e45b7563e7f91f415f40b68.png" alt=""></p>
+<p>使用该命令可以很直观的观察到 Activity 的泄漏问题，是我平常分析比较常用的一种方式。除了使用命令外，AndroidStudio 也提供了下面的功能，和使用命令是一样效果的。</p>
+<p><img src="https://diycode.b0.upaiyun.com/photo/2017/08e087a6f8fe70a4de3425765cb1022a.png" alt=""></p>
+<p>如果对 adb shell 命令感兴趣，更多的信息可以看下面提供的资源：</p>
+<ul>
+<li><a href="http://adbshell.com/" target="_blank" rel="external">http://adbshell.com/</a></li>
+<li><a href="https://github.com/mzlogin/awesome-adb" target="_blank" rel="external">https://github.com/mzlogin/awesome-adb</a></li>
+</ul>
+<p>以上就是我在做内存泄漏分析的时候会用到的工具，通常都是结合起来用，毕竟每个工具都有优缺点，通过使用多个工具互补分析问题可以极大的提高我们的效率和最终取得的效果。</p>
+<h2 id="泄漏的解决策略"><a href="#泄漏的解决策略" class="headerlink" title="泄漏的解决策略"></a>泄漏的解决策略</h2><p>聊完工具，最后来谈谈内存泄漏问题的解决策略。我把它总结为以下三点：</p>
+<ul>
+<li>完成需求功能开发后，再去优化内存泄漏问题；</li>
+<li>泄漏源有多处时，核心功能产生的泄漏优先处理，用户使用频繁的功能引起的泄漏优先处理；</li>
+<li>处理泄漏避免影响原有的代码逻辑，优化过后最好能够让测试童鞋过一遍相关的功能，避免引入未知的BUG；</li>
+</ul>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>对于如何在编码上去解决内存泄漏问题，网络上有提供了很多场景及其解决方案，大家可以自行借助搜索引擎。通过掌握分析方法和对泄漏场景及其解决方案的积累，相信大家处理内存泄漏问题是游刃有余的。当然，也并不是所有内存泄漏问题我们都能够进行处理，就例如第二章节提到的泄漏源头是由第三方代码引起时，我们就显得无能为力了。最近在排查的过程中就发现不少第三方 SDK 存在泄漏问题，遇上这种情况就得找找可替代的 SDK 进行更换了。以上就是我做内存泄漏分析的一些心得总结，如果有错误和不足，还请大家指出。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://blog.coderclock.com/2016/12/04/android/Android应用内存泄漏的定位、分析与解决策略/" data-id="cizihh9d90001j4et50lxpg9w" class="article-share-link">分享</a>
+      
+        <a href="http://blog.coderclock.com/2016/12/04/android/Android应用内存泄漏的定位、分析与解决策略/#ds-thread" class="article-comment-link">留言</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/内存泄漏/">内存泄漏</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/性能优化/">性能优化</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/12/27/life/走过2016时，我成长些什么/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">上一篇</strong>
+      <div class="article-nav-title">
+        
+          走过2016时，我成长些什么
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/10/08/android/深入了解 Messenger 的实现细节/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">深入了解 Messenger 的实现细节</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+      <div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="2016/12/04/android/Android应用内存泄漏的定位、分析与解决策略/" data-title="Android应用内存泄漏的定位、分析与解决策略" data-url="http://blog.coderclock.com/2016/12/04/android/Android应用内存泄漏的定位、分析与解决策略/"></div>
+	<!-- 多说评论框 end -->
+</div>
+
+
+</section>
+           
+    <aside id="sidebar">
+  
+    
+
+  
+    
+  
+    
+    <div class="widget-wrap">
+    
+      <div class="widget" id="toc-widget-fixed">
+      
+        <strong class="toc-title">文章目录</strong>
+        <div class="toc-widget-list">
+              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#什么是内存泄漏"><span class="toc-number">1.</span> <span class="toc-text">什么是内存泄漏</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#泄漏的源头"><span class="toc-number">2.</span> <span class="toc-text">泄漏的源头</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#泄漏的定位"><span class="toc-number">3.</span> <span class="toc-text">泄漏的定位</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#泄漏的解决策略"><span class="toc-number">4.</span> <span class="toc-text">泄漏的解决策略</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">5.</span> <span class="toc-text">总结</span></a></li></ol>
+          </div>
+      </div>
+    </div>
+
+  
+    
+
+  
+    
+  
+    
+  
+    
+
+
+  
+    
+
+  
+    
+
+  
+</aside>
+
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-left">
+      &copy; 2014 - 2017 D_clock爱吃葱花&nbsp;|&nbsp;
+      主题 <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
+    </div>
+     <div id="footer-right">
+      联系方式&nbsp;|&nbsp;d_clock@qq.com
+    </div>
+  </div>
+</footer>
+ <script src="/jquery/jquery.min.js"></script>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">首页</a>
+  
+    <a href="/archives" class="mobile-nav-link">归档</a>
+  
+    <a href="/about" class="mobile-nav-link">关于</a>
+  
+</nav>
+    <img class="back-to-top-btn" src="/images/fly-to-top.png"/>
+<script>
+// Elevator script included on the page, already.
+window.onload = function() {
+  var elevator = new Elevator({
+    selector:'.back-to-top-btn',
+    element: document.querySelector('.back-to-top-btn'),
+    duration: 1000 // milliseconds
+  });
+}
+</script>
+    
+
+
+    	<script type="text/javascript">
+        var duoshuoQuery = {short_name:"clockblog"};
+      </script>
+      <script src="/duoshuo/embed.js"></script>
+
+
+ <script src="/js/is.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+<script src="/js/elevator.js"></script>
+  </div>
+</body>
+</html>

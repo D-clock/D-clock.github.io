@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>深入了解 Messenger 的实现细节 | 技术视界</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="近一个半月因为工作变动的缘故，忙着交接工作和复习面试。没有多少时间来写博客，连一周三次的健身都有几个星期没练了，好多同事问我是胖了还是壮了（我迅速就岔开话题了，机智boy）。上周离职，这周主要在处理一些私事、做些入职准备工作、看点书之类的，下周入职YY（上周才知道原来大神罗升阳也在YY）。好啦，说了这么多，要开始进入 Messenger 的正题了。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="深入了解 Messenger 的实现细节">
+<meta property="og:url" content="http://blog.coderclock.com/2016/10/08/android/深入了解 Messenger 的实现细节/index.html">
+<meta property="og:site_name" content="技术视界">
+<meta property="og:description" content="近一个半月因为工作变动的缘故，忙着交接工作和复习面试。没有多少时间来写博客，连一周三次的健身都有几个星期没练了，好多同事问我是胖了还是壮了（我迅速就岔开话题了，机智boy）。上周离职，这周主要在处理一些私事、做些入职准备工作、看点书之类的，下周入职YY（上周才知道原来大神罗升阳也在YY）。好啦，说了这么多，要开始进入 Messenger 的正题了。">
+<meta property="og:image" content="https://diycode.b0.upaiyun.com/photo/2017/a6cf659c31bfe0b005dd8bc9f18426cc.png">
+<meta property="og:image" content="https://diycode.b0.upaiyun.com/photo/2017/d8d6d376a366fa1d0b408b7828d5ba79.png">
+<meta property="og:image" content="https://diycode.b0.upaiyun.com/photo/2017/61e80f19a43966224ea11fb4b97ce801.png">
+<meta property="og:image" content="https://diycode.b0.upaiyun.com/photo/2017/10fcc91df0c673b950a6a7f74f327b43.png">
+<meta property="og:image" content="https://diycode.b0.upaiyun.com/photo/2017/15a766d0ed824905144d94f38545033c.png">
+<meta property="og:image" content="https://diycode.b0.upaiyun.com/photo/2017/33da73b57f23f7c13f97dead0c93497b.png">
+<meta property="og:image" content="https://diycode.b0.upaiyun.com/photo/2017/2762a5428449b2d9ac814c196c50afee.png">
+<meta property="og:image" content="https://diycode.b0.upaiyun.com/photo/2017/1438f84cea8948bfd6d35b67a141424a.png">
+<meta property="og:image" content="https://diycode.b0.upaiyun.com/photo/2017/bd7fed8d546e5505947c4ba408e8d781.png">
+<meta property="og:image" content="https://diycode.b0.upaiyun.com/photo/2017/59916cacf58afaff8b337a76902aa9e0.png">
+<meta property="og:image" content="https://diycode.b0.upaiyun.com/photo/2017/a160ee359f0d34349ac62a50dce746e2.png">
+<meta property="og:image" content="https://diycode.b0.upaiyun.com/photo/2017/9a48c610ae4977f9e80c4a2628d2ec1f.png">
+<meta property="og:image" content="https://diycode.b0.upaiyun.com/photo/2017/a1de9e8e3aeeb04bb805802e4dd0417b.png">
+<meta property="og:image" content="https://diycode.b0.upaiyun.com/photo/2017/fdea89c099a1bfcfa886466c767835ae.png">
+<meta property="og:image" content="https://diycode.b0.upaiyun.com/photo/2017/f2451e09d6c7b2466881c8110ffe7661.png">
+<meta property="og:image" content="https://diycode.b0.upaiyun.com/photo/2017/808269016e812d11caa716350975f47d.png">
+<meta property="og:image" content="https://diycode.b0.upaiyun.com/photo/2017/2434fa379f759413c1b805413b2ac66d.png">
+<meta property="og:image" content="https://diycode.b0.upaiyun.com/photo/2017/2f2ba18b3de4ba3de081d9274138ab80.png">
+<meta property="og:updated_time" content="2017-02-23T14:03:20.080Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="深入了解 Messenger 的实现细节">
+<meta name="twitter:description" content="近一个半月因为工作变动的缘故，忙着交接工作和复习面试。没有多少时间来写博客，连一周三次的健身都有几个星期没练了，好多同事问我是胖了还是壮了（我迅速就岔开话题了，机智boy）。上周离职，这周主要在处理一些私事、做些入职准备工作、看点书之类的，下周入职YY（上周才知道原来大神罗升阳也在YY）。好啦，说了这么多，要开始进入 Messenger 的正题了。">
+<meta name="twitter:image" content="https://diycode.b0.upaiyun.com/photo/2017/a6cf659c31bfe0b005dd8bc9f18426cc.png">
+  
+    <link rel="alternate" href="/atom.xml" title="技术视界" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  
+    
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+<!-- Google Analytics -->
+<script type="text/javascript">
+
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  	ga('create', 'UA-91393761-2', 'auto');
+  	ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+  
+	<!-- 百度统计 -->
+	<script type="text/javascript">
+		var _hmt = _hmt || [];
+		(function() {
+ 			var hm = document.createElement("script");
+  			hm.src = "https://hm.baidu.com/hm.js?9e8a7a9cb9edac601fdb29f1394bc51e";
+			var s = document.getElementsByTagName("script")[0]; 
+  			s.parentNode.insertBefore(hm, s);
+		})();
+	</script>
+
+  
+	<!-- CNZZ统计 -->
+	<script type="text/javascript">
+		var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+		document.write(unescape("%3Cspan id='cnzz_stat_icon_1261297942'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s95.cnzz.com/z_stat.php%3Fid%3D1261297942%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));
+	</script>
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    
+    <div id="header-inner" class="inner">
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://blog.coderclock.com"></form>
+      </div>
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">首页</a>
+        
+          <a class="main-nav-link" href="/archives">归档</a>
+        
+          <a class="main-nav-link" href="/about">关于</a>
+        
+      </nav>
+      
+    </div>
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">技术视界</a>
+      </h1>
+      
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-android/深入了解 Messenger 的实现细节" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/10/08/android/深入了解 Messenger 的实现细节/" class="article-date">
+  <time datetime="2016-10-07T16:00:00.000Z" itemprop="datePublished">2016-10-08</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Android/">Android</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      深入了解 Messenger 的实现细节
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- Table of Contents -->
+        
+        <p>近一个半月因为工作变动的缘故，忙着交接工作和复习面试。没有多少时间来写博客，连一周三次的健身都有几个星期没练了，好多同事问我是胖了还是壮了（我迅速就岔开话题了，机智boy）。上周离职，这周主要在处理一些私事、做些入职准备工作、看点书之类的，下周入职YY（上周才知道原来大神罗升阳也在YY）。好啦，说了这么多，要开始进入 Messenger 的正题了。</p>
+<a id="more"></a>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>看这篇文章前，需要对 Android 的进程间通讯方式有所了解，不然可能会云里雾里。</p>
+<h2 id="从使用-Messenger-说起"><a href="#从使用-Messenger-说起" class="headerlink" title="从使用 Messenger 说起"></a>从使用 Messenger 说起</h2><p>Android 上实现 IPC （进程间通讯）的方式有好几种，其中有一种就是使用 AIDL 方式实现，对使用 AIDL 不了解的童鞋可以看下方的官方文档（需要梯子）。</p>
+<blockquote>
+<p><a href="https://developer.android.com/guide/components/aidl.html" target="_blank" rel="external">https://developer.android.com/guide/components/aidl.html</a></p>
+</blockquote>
+<p>对于使用 AIDL 方式通讯，其关键就在于创建 aidl 文件，系统会自动为 aidl 文件生成相应的 Java 类，其关键实现在于生成的 Java 类中。</p>
+<p><img src="https://diycode.b0.upaiyun.com/photo/2017/a6cf659c31bfe0b005dd8bc9f18426cc.png" alt=""></p>
+<p>系统提供了一个更方便我们进行 IPC 的类 —— Messenger，先来看看如何使用 Messenger（熟悉的童鞋完全可以跳过这一部分）。</p>
+<ul>
+<li>第一步：客户端进程创建两个 Messenger，一个 Sender ，一个 Receiver；</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="comment">//客户端进程发消息给服务进程</span></div><div class="line"><span class="keyword">private</span> Messenger mSender;</div><div class="line"><span class="comment">//客户端进程接收服务进程回调</span></div><div class="line"><span class="keyword">private</span> Messenger mReceiver = <span class="keyword">new</span> Messenger(<span class="keyword">new</span> Handler() &#123;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">handleMessage</span><span class="params">(Message msg)</span> </span>&#123;</div><div class="line">        <span class="keyword">super</span>.handleMessage(msg);</div><div class="line">        Bundle data = msg.getData();</div><div class="line">        <span class="keyword">if</span> (data != <span class="keyword">null</span>) &#123;</div><div class="line">            String response = data.getString(<span class="string">"body"</span>);</div><div class="line">            Toast.makeText(MainActivity.<span class="keyword">this</span>, response, Toast.LENGTH_SHORT).show();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<ul>
+<li>第二步：编写Service类，并需要在 AndroidManifest.xml 配置多进程；</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">IPCService</span> <span class="keyword">extends</span> <span class="title">Service</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> Messenger messenger = <span class="keyword">new</span> Messenger(<span class="keyword">new</span> Handler() &#123;</div><div class="line">        <span class="meta">@Override</span></div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">handleMessage</span><span class="params">(Message msg)</span> </span>&#123;</div><div class="line">            <span class="keyword">super</span>.handleMessage(msg);</div><div class="line">            <span class="keyword">try</span> &#123;</div><div class="line">                Thread.sleep(<span class="number">2</span> * <span class="number">1000</span>);</div><div class="line">            &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</div><div class="line">                e.printStackTrace();</div><div class="line">            &#125;</div><div class="line">            Message response = Message.obtain();</div><div class="line">            Bundle data = <span class="keyword">new</span> Bundle();</div><div class="line">            data.putString(<span class="string">"body"</span>, <span class="string">"response"</span>);</div><div class="line">            response.setData(data);</div><div class="line">            <span class="keyword">try</span> &#123;</div><div class="line">                msg.replyTo.send(response);<span class="comment">//回调客户端</span></div><div class="line">            &#125; <span class="keyword">catch</span> (RemoteException e) &#123;</div><div class="line">                e.printStackTrace();</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;);</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> IBinder <span class="title">onBind</span><span class="params">(Intent intent)</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> messenger.getBinder();<span class="comment">//将Binder返回给请求绑定的进程</span></div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<ul>
+<li>第三步：绑定Service进程，并在 ServiceConnection 中初始化 Sender；</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">Intent intent = <span class="keyword">new</span> Intent(<span class="keyword">this</span>, IPCService.class);</div><div class="line">startService(intent);</div><div class="line">bindService(intent, conn, Context.BIND_AUTO_CREATE);<span class="comment">//启动绑定Service进程</span></div><div class="line"></div><div class="line"><span class="keyword">private</span> ServiceConnection conn = <span class="keyword">new</span> ServiceConnection() &#123;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onServiceConnected</span><span class="params">(ComponentName name, IBinder service)</span> </span>&#123;</div><div class="line">        mSender = <span class="keyword">new</span> Messenger(service); <span class="comment">//用Binder初始化Sender</span></div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onServiceDisconnected</span><span class="params">(ComponentName name)</span> </span>&#123;</div><div class="line"></div><div class="line">    &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<ul>
+<li>第四步：用 Sender 和 Receiver 完成客户端进程和服务进程的交互。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="keyword">if</span> (mSender != <span class="keyword">null</span>) &#123;</div><div class="line">    Message message = Message.obtain();</div><div class="line">    message.replyTo = mReceiver;<span class="comment">//将 Receiver 一并发送给服务进程</span></div><div class="line">    <span class="keyword">try</span> &#123;</div><div class="line">         mSender.send(message);</div><div class="line">    &#125; <span class="keyword">catch</span> (RemoteException e) &#123;</div><div class="line">         e.printStackTrace();</div><div class="line">    &#125;</div><div class="line"> &#125;</div></pre></td></tr></table></figure>
+<p>至此，在绑定服务进程初始化 Sender 后，即可以做多进程间的交互工作了。使用 Messenger 来实现多进程的交互相比我们用 aidl 来要方便得多，但是 Messenger 的内部也是采用 aidl 实现的，只不过为了方便开发者调用而进行一些封装，使得开发者们可以忽略 aidl 的实现细节。简单的了解了 Messenger 的基本使用后，下面我们就来看看 Messenger 的源代码，了解一些内部的实现细节。</p>
+<h2 id="Messenger-源代码通读"><a href="#Messenger-源代码通读" class="headerlink" title="Messenger 源代码通读"></a>Messenger 源代码通读</h2><p>Messenger 类位于 android.os 包下，代码量不是很多，所以看起来难度不大，只有如下这么几个方法。</p>
+<p><img src="https://diycode.b0.upaiyun.com/photo/2017/d8d6d376a366fa1d0b408b7828d5ba79.png" alt=""></p>
+<p>在上面的示例代码中可以看到，客户端进程有 Sender 和 Receiver 两个 Messenger，如果不需要实现服务进程回调客户端进程，那么 Receiver 完全可以不要。当需要服务进程回调客户端进程时，则需要传入 Receiver 了。由于需要在进程间传递 Messenger 对象，那么 Messenger 类就必须要继承 Serializable 或者 Parcelable 接口。按照 Android 系统一向的风格，都是偏向于推荐继承 Parcelable 来实现。</p>
+<p><img src="https://diycode.b0.upaiyun.com/photo/2017/61e80f19a43966224ea11fb4b97ce801.png" alt=""></p>
+<p>所以，上面看到的 describeContents、writeToParcel 方法和 CREATOR 对象实际上继承 Parcelable 的实现。不明白的童鞋可以参照 Parcelable 的官方文档（需要梯子）</p>
+<blockquote>
+<p><a href="https://developer.android.com/reference/android/os/Parcelable.html" target="_blank" rel="external">https://developer.android.com/reference/android/os/Parcelable.html</a></p>
+</blockquote>
+<p>而 equals 和 hashCode 方法自然不用多说啦，大家熟悉得很。而 writeMessengerOrNullToParcel 和 readMessengerOrNullFromParcel 这对静态方法主要是实现 Messenger 在 Parcel 中的读写操作的，实现比较简单，大家参见下面代码就可以理解了。</p>
+<p><img src="https://diycode.b0.upaiyun.com/photo/2017/10fcc91df0c673b950a6a7f74f327b43.png" alt=""></p>
+<p>当然，Messenger 除了继承 Parcelable 外，还需要声明一个同名的 Messenger.aidl 文件，可以在 framework 层源码下 android.os 包中找到 Messenger.aidl 文件，对于写过 aidl 的童鞋，肯定不陌生了。</p>
+<p><img src="https://diycode.b0.upaiyun.com/photo/2017/15a766d0ed824905144d94f38545033c.png" alt=""></p>
+<p>排除掉上面提到的方法，剩下的主要是 Messenger 的两个构造方法以及 getBinder 和 send 方法。客户端调用服务进程方法时，是通过 Messenger 中的 send 方法，所以我们先直接看 send 方法中的内部实现</p>
+<p><img src="https://diycode.b0.upaiyun.com/photo/2017/33da73b57f23f7c13f97dead0c93497b.png" alt=""></p>
+<p>其内部是调用了 mTarget 的 send 方法，那么 mTarget 又是何物呢？</p>
+<p><img src="https://diycode.b0.upaiyun.com/photo/2017/2762a5428449b2d9ac814c196c50afee.png" alt=""></p>
+<p>从上面可以看到 mTarget 是一个 IMessenger 实例，作为 Messenger 唯一的成员变量。 初始化 mTarget 是在 public Messenger(Handler target) 构造函数中，利用 Handler 的 getIMessenger 方法来获取一个 IMessenger 的实例。</p>
+<p><img src="https://diycode.b0.upaiyun.com/photo/2017/1438f84cea8948bfd6d35b67a141424a.png" alt=""></p>
+<p>从上图可以看到 getIMessenger 前面是没有修饰符的，这样控制了该方法的作用域仅限于 android.os 包内给其他类使用，我们日常开发是无法使用该方法的，所以在 API 文档中也没有提供相应接口文档。在倒数第二行中可以看到 new MessengerImpl() 并在最后 return 给调用者。所以实际上， mTarget 具体实现是在 MessengerImpl 中。</p>
+<p><img src="https://diycode.b0.upaiyun.com/photo/2017/bd7fed8d546e5505947c4ba408e8d781.png" alt=""></p>
+<p>MessengerImpl 实际上是 Handler 的一个私有内部类，它继承了 IMessenger.Stub 并实现 send 方法。用过 aidl 的童鞋 IMessenger.Stub 的身影想必就明白了，实际上 IMessenger 就是系统提供的 IMessenger.aidl 文件，而 IMessenger.Stub 就是由 IMessenger.aidl 生成的类。 IMessenger.aidl 在 framework 层代码的 android.os 包中可以找到，而关于 IMessenger 的 Java 实现，则可以看下面的链接。</p>
+<blockquote>
+<p><a href="http://grepcode.com/file/repository.grepcode.com/java/ext/com.google.android/android/5.1.1_r1/android/os/IMessenger.java/" target="_blank" rel="external">http://grepcode.com/file/repository.grepcode.com/java/ext/com.google.android/android/5.1.1_r1/android/os/IMessenger.java/</a></p>
+</blockquote>
+<p>MessengerImpl 的 send 实现相对也比较简单，只有两行代码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">send</span><span class="params">(Message msg)</span> </span>&#123;</div><div class="line">    msg.sendingUid = Binder.getCallingUid();</div><div class="line">    Handler.<span class="keyword">this</span>.sendMessage(msg);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>首先是将发起调用的客户端进程的 Linux Uid 存储在我们传入的 Message 对象中，服务进程收到 Message 可以通过 msg.sendingUid 得知发起调用的进程的 Linux Uid。接着通过 Handler 的 sendMessage 方法发送给服务进程，这意味着 Messenger 与服务进程间的操作是串行的，因此，在有并行需求的场景下 Messenger 就不适用了。</p>
+<p>了解完了 send 方法后，最后就只剩下 getBinder 了，其内部实现也简单。</p>
+<p><img src="https://diycode.b0.upaiyun.com/photo/2017/59916cacf58afaff8b337a76902aa9e0.png" alt=""></p>
+<p>参照前面的示例代码，这里主要还是在 Service 的 onBind 方法中返回 Binder 对象给客户端调用，实现同样是 IMessenger 的 Java 实现中。</p>
+<p>至此，基本上看完了整个 Messenger 的内部代码，从上面的分析上看，内部实现确实非常简单，基于 aidl 的基础上做的封装实现，又对开发者屏蔽了底层 aidl 的实现细节。当然个人认为有两点不足之处：</p>
+<ul>
+<li>一个前面提到的 send 操作串行，并行场景则无法用 Messenger；</li>
+<li>Messenger 内部没有做 Binder 键断裂重连的处理（个人认为内部处理了会更好，更加屏蔽底层的实现细节）；</li>
+</ul>
+<h2 id="远程调用的阻塞与非阻塞"><a href="#远程调用的阻塞与非阻塞" class="headerlink" title="远程调用的阻塞与非阻塞"></a>远程调用的阻塞与非阻塞</h2><p>Android 系统跨进程通讯的底层实现都是通过 Binder 实现，正常情况下客户端进程发起一个远程方法调用的流程大致如下：</p>
+<ol>
+<li>客户端线程发起调用；</li>
+<li>客户端线程将远程调用操作交给 Binder 线程池，并阻塞等待返回远程方法执行完毕返回；</li>
+</ol>
+<p><img src="https://diycode.b0.upaiyun.com/photo/2017/a160ee359f0d34349ac62a50dce746e2.png" alt=""></p>
+<p>这也就意味着，我们不能在客户端进程的 UI 线程中发起远程方法调用，不然如果远程方法执行了耗时操作，客户端的 UI 线程将会被阻塞，从而造成 ANR 的问题存在。读者可以自行尝试自定义 aidl 并发起一个耗时的远程方法调用进行验证。但是，如果你使用系统提供的 Messenger ，则不会出现这样的问题，无论你的远程方法执行多么耗时，客户端 Messenger 发起调用后会继续执行接下来的代码，并不会进行阻塞等待。这里让我百思不得其解，为什么呢？前面我们可以看到 Messenger 的 send 方法实现是在 MessengerImpl 中</p>
+<p><img src="https://diycode.b0.upaiyun.com/photo/2017/9a48c610ae4977f9e80c4a2628d2ec1f.png" alt=""></p>
+<p>并且，发送 Messeage 的操作是利用主线程的 Handler ，并没有其他的异步操作，为何执行的过程中不阻塞？这点我也完全没有想明白，最后折腾半天无果向任玉刚老师求助才得到答案。原来，默认情况下发起的远程方法调用都是阻塞式的，但也可以是非阻塞式的。 Messenger 就是采用非阻塞的方式通讯，其关键就在于 IMessenger.aidl 的实现</p>
+<p><img src="https://diycode.b0.upaiyun.com/photo/2017/a1de9e8e3aeeb04bb805802e4dd0417b.png" alt=""></p>
+<p>相比平常自定义的 aidl，多了 oneway 的关键字，声明和不声明 oneway 关键字的在于生成 Java 类中一个参数</p>
+<p><img src="https://diycode.b0.upaiyun.com/photo/2017/fdea89c099a1bfcfa886466c767835ae.png" alt=""></p>
+<p><img src="https://diycode.b0.upaiyun.com/photo/2017/f2451e09d6c7b2466881c8110ffe7661.png" alt=""></p>
+<p>不声明 oneway 时，mRemote.transact 传入的最后一个参数是 0；声明 oneway 时，mRemote.transact 传入的最后一个参数是 android.os.IBinder.FLAG_ONEWAY 。</p>
+<p><img src="https://diycode.b0.upaiyun.com/photo/2017/808269016e812d11caa716350975f47d.png" alt=""></p>
+<p><img src="https://diycode.b0.upaiyun.com/photo/2017/2434fa379f759413c1b805413b2ac66d.png" alt=""></p>
+<p>查看 API 文档即可以看到 FLAG_ONEWAY 的作用就是让客户端能够非阻塞的调用远程方法，至此真相大白，如果我们自定义的 aidl 也想实现非阻塞的调用，只需声明 oneway 关键字即可。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>因为平时并不常用到 oneway，加上文档提及的很少，唯一有描述的就是下面这段。这次看了 Messenger 的代码才知道有这么回事，也是涨姿势了。</p>
+<p><img src="https://diycode.b0.upaiyun.com/photo/2017/2f2ba18b3de4ba3de081d9274138ab80.png" alt=""></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://blog.coderclock.com/2016/10/08/android/深入了解 Messenger 的实现细节/" data-id="cizihh9dr000lj4etjo7ajxfl" class="article-share-link">分享</a>
+      
+        <a href="http://blog.coderclock.com/2016/10/08/android/深入了解 Messenger 的实现细节/#ds-thread" class="article-comment-link">留言</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Messenger/">Messenger</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/源码分析/">源码分析</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/12/04/android/Android应用内存泄漏的定位、分析与解决策略/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">上一篇</strong>
+      <div class="article-nav-title">
+        
+          Android应用内存泄漏的定位、分析与解决策略
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/09/04/android/ScratchView：一步步打造万能的 Android 刮奖效果控件/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">ScratchView：一步步打造万能的 Android 刮奖效果控件</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+      <div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="2016/10/08/android/深入了解 Messenger 的实现细节/" data-title="深入了解 Messenger 的实现细节" data-url="http://blog.coderclock.com/2016/10/08/android/深入了解 Messenger 的实现细节/"></div>
+	<!-- 多说评论框 end -->
+</div>
+
+
+</section>
+           
+    <aside id="sidebar">
+  
+    
+
+  
+    
+  
+    
+    <div class="widget-wrap">
+    
+      <div class="widget" id="toc-widget-fixed">
+      
+        <strong class="toc-title">文章目录</strong>
+        <div class="toc-widget-list">
+              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#从使用-Messenger-说起"><span class="toc-number">2.</span> <span class="toc-text">从使用 Messenger 说起</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Messenger-源代码通读"><span class="toc-number">3.</span> <span class="toc-text">Messenger 源代码通读</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#远程调用的阻塞与非阻塞"><span class="toc-number">4.</span> <span class="toc-text">远程调用的阻塞与非阻塞</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">5.</span> <span class="toc-text">总结</span></a></li></ol>
+          </div>
+      </div>
+    </div>
+
+  
+    
+
+  
+    
+  
+    
+  
+    
+
+
+  
+    
+
+  
+    
+
+  
+</aside>
+
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-left">
+      &copy; 2014 - 2017 D_clock爱吃葱花&nbsp;|&nbsp;
+      主题 <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
+    </div>
+     <div id="footer-right">
+      联系方式&nbsp;|&nbsp;d_clock@qq.com
+    </div>
+  </div>
+</footer>
+ <script src="/jquery/jquery.min.js"></script>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">首页</a>
+  
+    <a href="/archives" class="mobile-nav-link">归档</a>
+  
+    <a href="/about" class="mobile-nav-link">关于</a>
+  
+</nav>
+    <img class="back-to-top-btn" src="/images/fly-to-top.png"/>
+<script>
+// Elevator script included on the page, already.
+window.onload = function() {
+  var elevator = new Elevator({
+    selector:'.back-to-top-btn',
+    element: document.querySelector('.back-to-top-btn'),
+    duration: 1000 // milliseconds
+  });
+}
+</script>
+    
+
+
+    	<script type="text/javascript">
+        var duoshuoQuery = {short_name:"clockblog"};
+      </script>
+      <script src="/duoshuo/embed.js"></script>
+
+
+ <script src="/js/is.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+<script src="/js/elevator.js"></script>
+  </div>
+</body>
+</html>
