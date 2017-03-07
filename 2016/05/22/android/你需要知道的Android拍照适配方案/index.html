@@ -20,7 +20,8 @@
 <meta property="og:image" content="https://diycode.b0.upaiyun.com/photo/2017/8e1cb72808ceb55be3aa16276fb6bb15.png">
 <meta property="og:image" content="https://diycode.b0.upaiyun.com/photo/2017/0bad791d4a3dfc460661d904c7aa01d0.png">
 <meta property="og:image" content="https://diycode.b0.upaiyun.com/photo/2017/80c72b3f1aa625f4f7fe10475a36faf4.png">
-<meta property="og:updated_time" content="2017-02-22T14:13:51.762Z">
+<meta property="og:image" content="https://diycode.b0.upaiyun.com/photo/2017/a3fc893f2cf4d4ab33ac32666d00a793.jpg">
+<meta property="og:updated_time" content="2017-03-07T14:14:48.150Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="你需要知道的Android拍照适配方案">
 <meta name="twitter:description" content="近段时间，家里陪自己度过大学四年的电脑坏了，挑选好的新电脑配件终于在本周全部到货，自己动手完成组装。从AMD到i7的CPU，6G内存到14G内存，打开 AndroidStudio 的速度终于杠杆的上去了，感动到泪流满面啊！！！！！！！扯了这么多，回归一下正题，还是来说说本篇文章要写什么吧！说起调用系统相机来拍照的功能，大家肯定不陌生，现在所有应用都具备这个功能。例如最基本的，用户拍照上传头像。An">
@@ -215,12 +216,13 @@
 <p>以上的示例代码已经整理到：<a href="https://github.com/D-clock/AndroidStudyCode" target="_blank" rel="external">https://github.com/D-clock/AndroidStudyCode</a> ，主要的代码在下面红圈部分</p>
 <p><img src="https://diycode.b0.upaiyun.com/photo/2017/80c72b3f1aa625f4f7fe10475a36faf4.png" alt=""></p>
 <p>感兴趣的童鞋可以自行查看！如有错误，欢迎大家指正！</p>
-<h2 id="打个广告"><a href="#打个广告" class="headerlink" title="打个广告"></a>打个广告</h2><p>最近 <a href="http://diycode.cc/" target="_blank" rel="external">diycode 社区</a> 上，越来越多开发小伙伴活跃在上面。看着有意思的提问，有意思的回答，我的感触还是蛮大的，曾经渴望过有这样一个优雅问答的技术社区存在，目前在一点点的实现！希望能够它能够越做越好！喜欢开发的小伙伴也可以一起上来 <a href="http://diycode.cc/" target="_blank" rel="external">http://diycode.cc/</a> 探讨交流！</p>
+<p><strong>转载请注明出处，喜欢我的文章可以搜索并关注我的微信公众号：技术视界</strong></p>
+<p><img src="https://diycode.b0.upaiyun.com/photo/2017/a3fc893f2cf4d4ab33ac32666d00a793.jpg" alt=""></p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.coderclock.com/2016/05/22/android/你需要知道的Android拍照适配方案/" data-id="cizw4wi6b000r7getijs85ggw" class="article-share-link">分享</a>
+      <a data-url="http://blog.coderclock.com/2016/05/22/android/你需要知道的Android拍照适配方案/" data-id="cizzmhhzq001xrsetr7e66awx" class="article-share-link">分享</a>
       
         <a href="http://blog.coderclock.com/2016/05/22/android/你需要知道的Android拍照适配方案/#ds-thread" class="article-comment-link">留言</a>
       
@@ -279,7 +281,7 @@
       
         <strong class="toc-title">文章目录</strong>
         <div class="toc-widget-list">
-              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#拍照功能实现"><span class="toc-number">1.</span> <span class="toc-text">拍照功能实现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#有没有相机可用？"><span class="toc-number">2.</span> <span class="toc-text">有没有相机可用？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#拍出来的照片“歪了”！！！"><span class="toc-number">3.</span> <span class="toc-text">拍出来的照片“歪了”！！！</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#拍完照怎么闪退了？"><span class="toc-number">4.</span> <span class="toc-text">拍完照怎么闪退了？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#图片无法显示"><span class="toc-number">5.</span> <span class="toc-text">图片无法显示</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">6.</span> <span class="toc-text">总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#打个广告"><span class="toc-number">7.</span> <span class="toc-text">打个广告</span></a></li></ol>
+              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#拍照功能实现"><span class="toc-number">1.</span> <span class="toc-text">拍照功能实现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#有没有相机可用？"><span class="toc-number">2.</span> <span class="toc-text">有没有相机可用？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#拍出来的照片“歪了”！！！"><span class="toc-number">3.</span> <span class="toc-text">拍出来的照片“歪了”！！！</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#拍完照怎么闪退了？"><span class="toc-number">4.</span> <span class="toc-text">拍完照怎么闪退了？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#图片无法显示"><span class="toc-number">5.</span> <span class="toc-text">图片无法显示</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">6.</span> <span class="toc-text">总结</span></a></li></ol>
           </div>
       </div>
     </div>
